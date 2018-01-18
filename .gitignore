@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gitignore
+.idea/
+out/
+sUtils.iml
+src/config.yml
+src/me/
+src/plugin.yml
