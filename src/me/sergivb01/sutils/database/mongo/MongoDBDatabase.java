@@ -7,6 +7,7 @@ import com.mongodb.client.MongoDatabase;
 import me.sergivb01.sutils.ServerUtils;
 import me.sergivb01.sutils.player.data.PlayerProfile;
 import me.sergivb01.sutils.utils.ConfigUtils;
+import net.veilmc.base.BasePlugin;
 import net.veilmc.hcf.HCF;
 import net.veilmc.hcf.faction.type.PlayerFaction;
 import org.bson.Document;
@@ -14,9 +15,11 @@ import org.bson.conversions.Bson;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MongoDBDatabase {
 	private ServerUtils instance;
@@ -44,6 +47,36 @@ public class MongoDBDatabase {
 
 	}
 
+	public static void handleDeath(PlayerDeathEvent event){
+		if(event.getEntity().getKiller() != null && event.getEntity() != null){
+				handleCombat(event.getEntity().getUniqueId(), event.getEntity().getKiller().getUniqueId(), event.getDeathMessage());
+				return;
+		}
+
+		if(event.getEntity() != null){
+			Document document = new Document("dead", event.getEntity().getUniqueId())
+					.append("killer", "ENVIROMENT")
+					.append("deathmsg", event.getDeathMessage())
+					.append("timestamp", System.currentTimeMillis());
+		}
+
+	}
+
+	public static void handleCombat(UUID deadUUID, UUID killerUUID, String deathMessage){
+		Document document = new Document("dead", deadUUID)
+				.append("killer", killerUUID)
+				.append("deathmsg", deathMessage)
+				.append("timestamp", System.currentTimeMillis());
+	}
+
+	public static void addPlayerDeath(UUID playerUUID, Document document){
+		Document found = playercollection.find(new Document("uuid", playerUUID)).first();
+		if(found != null) {
+			Bson updateOperation = new Document("$push", new Document("deaths", document));
+			playercollection.updateOne(found, updateOperation);
+		}
+	}
+
 	public static void saveFactionToDatabase(PlayerFaction playerFaction){
 		List<String> allies = new ArrayList<>();
 		playerFaction.getAlliedFactions().forEach(playerFaction1 -> allies.add(playerFaction.getName()));
@@ -67,20 +100,13 @@ public class MongoDBDatabase {
 	}
 
 	public static void saveProfileToDatabase(PlayerProfile playerProfile, boolean online){
-		PlayerFaction playerFaction = HCF.getPlugin().getFactionManager().getPlayerFaction(playerProfile.getPlayer().getUniqueId());
 		Player player = playerProfile.getPlayer();
-
-		Document faction = new Document("faction", playerFaction != null);
-		if(playerFaction != null){ //Player has a faction. Save faction data into doc
-			faction.append("name", playerFaction.getName());
-			faction.append("uuid", playerFaction.getUniqueID());
-			saveFactionToDatabase(playerFaction);
-		}
 
 		//This includes ores, kills/deaths and more to add!
 		Document profile = new Document("spawn-tokens", HCF.getInstance().getUserManager().getUser(player.getUniqueId()).getSpawnTokens())
 				.append("kills", player.getStatistic(Statistic.PLAYER_KILLS))
 				.append("deaths", player.getStatistic(Statistic.DEATHS))
+				.append("notes", BasePlugin.getPlugin().getUserManager().getUser(player.getUniqueId()).getNotes())
 				.append("ores",
 						//Save player ores
 						new Document("diamonds", player.getStatistic(Statistic.MINE_BLOCK, Material.DIAMOND_ORE))
@@ -91,6 +117,17 @@ public class MongoDBDatabase {
 								.append("redstone", player.getStatistic(Statistic.MINE_BLOCK, Material.REDSTONE_ORE))
 								.append("emerald", player.getStatistic(Statistic.MINE_BLOCK, Material.EMERALD_ORE))
 				);
+
+
+		PlayerFaction playerFaction = HCF.getPlugin().getFactionManager().getPlayerFaction(playerProfile.getPlayer().getUniqueId());
+
+		Document faction = new Document("faction", playerFaction != null);
+		if(playerFaction != null){ //Player has a faction. Save faction data into doc
+			faction.append("name", playerFaction.getName());
+			faction.append("uuid", playerFaction.getUniqueID());
+			saveFactionToDatabase(playerFaction);
+		}
+
 
 		//Includes all player profile (faction, )
 		Document doc = new Document("uuid", player.getUniqueId())

@@ -1,23 +1,34 @@
 package me.sergivb01.sutils.database.redis.pubsub;
 
-import me.sergivb01.sutils.database.redis.RedisDatabase;
+import lombok.Getter;
+import me.sergivb01.sutils.ServerUtils;
+import me.sergivb01.sutils.utils.ConfigUtils;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 public class Publisher {
-	private RedisDatabase redisDatabase;
+	@Getter private JedisPool pool;
 	private String channel;
 
-	public Publisher(RedisDatabase redisDatabase, String channel){
-		this.redisDatabase = redisDatabase;
+	public Publisher(ServerUtils instance, String channel){
+		if(instance.getConfig().getBoolean("redis.auth.enabled")) {
+			pool = new JedisPool(new JedisPoolConfig(), ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT,  ConfigUtils.REDIS_TIMEOUT,  ConfigUtils.REDIS_AUTH_PASSWORD);
+		}else {
+			pool = new JedisPool(new JedisPoolConfig(), ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT,  ConfigUtils.REDIS_TIMEOUT);
+		}
 		this.channel = channel;
 	}
 
 	public void write(final String message) {
 		Jedis jedis = null;
 		try {
-			jedis = redisDatabase.getPool().getResource();
+			jedis = pool.getResource();
+			if(ConfigUtils.REDIS_AUTH_ENABLED){
+				jedis.auth(ConfigUtils.REDIS_AUTH_PASSWORD);
+			}
 			jedis.publish(channel, message);
-			redisDatabase.getPool().returnResource(jedis);
+			pool.returnResource(jedis);
 		}
 		finally {
 			if (jedis != null) {

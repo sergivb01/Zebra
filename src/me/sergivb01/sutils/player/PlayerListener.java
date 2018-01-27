@@ -1,6 +1,7 @@
 package me.sergivb01.sutils.player;
 
 import me.sergivb01.sutils.ServerUtils;
+import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.player.data.PlayerProfile;
 import me.sergivb01.sutils.utils.ConfigUtils;
@@ -10,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -24,7 +26,7 @@ public class PlayerListener implements Listener{
 		this.instance = instance;
 		Bukkit.getPluginManager().registerEvents(this, instance);
 		for(Player player : Bukkit.getOnlinePlayers()){
-			player.kickPlayer("Relog please.");
+			player.performCommand("hub");
 		}
 	}
 
@@ -51,8 +53,10 @@ public class PlayerListener implements Listener{
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event){
 		Player player = event.getPlayer();
-		Cache.getPlayerProfile(player.getUniqueId()).save(true);
-		Cache.removeProfile(player);
+		Bukkit.getScheduler().runTaskAsynchronously(instance, ()->{
+			Cache.getPlayerProfile(player.getUniqueId()).save(false);
+			Cache.removeProfile(player);
+		});
 	}
 
 
@@ -66,6 +70,11 @@ public class PlayerListener implements Listener{
 			RedisDatabase.getPublisher().write("staffchat;" + player.getName() + ";" + ConfigUtils.SERVER_NAME + ";" + event.getMessage().replace(";", ":"));
 			event.setCancelled(true);
 		}
+	}
+
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent event){
+		MongoDBDatabase.handleDeath(event);
 	}
 
 }

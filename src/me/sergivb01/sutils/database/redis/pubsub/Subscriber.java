@@ -25,6 +25,9 @@ public class Subscriber {
 	public Subscriber(ServerUtils instance) {
 		this.instance = instance;
 		this.jedis = new Jedis(ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT, ConfigUtils.REDIS_TIMEOUT);
+		if(ConfigUtils.REDIS_AUTH_ENABLED){
+			this.jedis.auth(ConfigUtils.REDIS_AUTH_PASSWORD);
+		}
 		this.init();
 	}
 

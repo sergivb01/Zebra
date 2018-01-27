@@ -50,7 +50,7 @@ public class ServerUtils extends JavaPlugin{
 
 	public void onDisable(){
 		RedisDatabase.getSubscriber().getJedisPubSub().unsubscribe();
-		RedisDatabase.getPool().destroy();
+		RedisDatabase.getPublisher().getPool().destroy();
 	}
 
 	public static void broadcastKoth(String kothName){
