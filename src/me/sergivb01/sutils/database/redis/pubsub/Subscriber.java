@@ -5,7 +5,6 @@ import me.sergivb01.sutils.ServerUtils;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.bukkit.ChatColor.*;
+
 
 public class Subscriber {
 	private ServerUtils instance;
@@ -42,15 +42,29 @@ public class Subscriber {
 					final String server = args[2];
 					final String msg = args[3];
 					switch (command) {
+						case "koth":
+							new FancyMessage("[Koth Alert] ")
+									.color(YELLOW)
+									.then(sender)
+									.color(GOLD)
+									.then(" is now running on ")
+									.color(YELLOW)
+									.then(server)
+									.color(GOLD)
+									.then("!")
+									.color(YELLOW)
+									.send(Bukkit.getOnlinePlayers());
+							break;
+
 						case "staffchat":
 							new FancyMessage("(Staff) ")
-									.color(ChatColor.BLUE)
+									.color(BLUE)
 									.then("[" + server + "] ")
-									.color(ChatColor.DARK_AQUA)
+									.color(DARK_AQUA)
 									.command("/staffserver " + server)
 									.tooltip(GRAY + "Click to teleport to " + server)
 									.then(sender + ": ")
-									.color(ChatColor.AQUA)
+									.color(AQUA)
 									.then(msg).send(getStaff());
 							break;
 						case "request":
@@ -81,11 +95,11 @@ public class Subscriber {
 									.then(reportedPlayer)
 									.color(AQUA)
 									.then(" has been reported.")
-									.tooltip(GRAY + "Reported by " + sender)
+									.tooltip(GRAY + "Report submitted by " + AQUA + sender)
 									.color(GRAY)
 									.then("\n   Reason: ")
 									.color(RED)
-									.then(msg)
+									.then(msg.replace(reportedPlayer + " ", ""))
 									.color(GRAY)
 									.send(getStaff());
 							break;

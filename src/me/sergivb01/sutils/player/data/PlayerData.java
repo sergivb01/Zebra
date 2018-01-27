@@ -16,7 +16,7 @@ public class PlayerData {
 	@Getter @Setter PlayerVersion playerVersion;
 
 	//Dynamic stuff (Balance, faction name, ...)
-	@Getter @Setter private int balance = 0;
+	//@Getter @Setter private int balance = 0;
 
 	public PlayerData (Player player){
 		this.address = player.getAddress().getHostString();

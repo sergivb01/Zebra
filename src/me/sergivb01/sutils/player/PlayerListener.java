@@ -42,9 +42,6 @@ public class PlayerListener implements Listener{
 				.tooltip("Click to open your profile")
 				.send(player);
 
-		playerProfile.getPlayerData().setBalance(500);
-		player.sendMessage(Cache.getPlayerProfile(player).getPlayerData().getBalance() + "");
-
 		Cache.getPlayerProfile(player.getUniqueId()).save(true);
 	}
 

@@ -1,9 +1,6 @@
 package me.sergivb01.sutils;
 
-import me.sergivb01.sutils.commands.staff.ReportCommand;
-import me.sergivb01.sutils.commands.staff.RequestCommand;
-import me.sergivb01.sutils.commands.staff.StaffChatCommand;
-import me.sergivb01.sutils.commands.staff.StaffServerCommand;
+import me.sergivb01.sutils.commands.staff.*;
 import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.player.PlayerListener;
@@ -39,6 +36,9 @@ public class ServerUtils extends JavaPlugin{
 		getCommand("sc").setExecutor(new StaffChatCommand());
 		getCommand("staffserver").setExecutor(new StaffServerCommand(this));
 
+		//Test command
+		getCommand("test").setExecutor(new TestCommand());
+
 
 		Map<String, Map<String, Object>> map = getDescription().getCommands();
 		for (Map.Entry<String, Map<String, Object>> entry : map.entrySet()) {
@@ -51,6 +51,10 @@ public class ServerUtils extends JavaPlugin{
 	public void onDisable(){
 		RedisDatabase.getSubscriber().getJedisPubSub().unsubscribe();
 		RedisDatabase.getPool().destroy();
+	}
+
+	public static void broadcastKoth(String kothName){
+		RedisDatabase.getPublisher().write("koth;" + kothName + ";" + ConfigUtils.SERVER_NAME + ";placeholder");
 	}
 
 }
