@@ -23,7 +23,7 @@ public class MongoDBDatabase {
 	private MongoClient mongoClient;
 	private static MongoDatabase mongoDatabase;
 	public static MongoCollection<Document> playercollection;
-	public static MongoCollection<Document> punishCollection;
+	public static MongoCollection<Document> factionCollection;
 
 	public MongoDBDatabase (ServerUtils instance){
 		this.instance = instance;
@@ -40,7 +40,29 @@ public class MongoDBDatabase {
 		mongoClient = new MongoClient(uri);
 		mongoDatabase = mongoClient.getDatabase(ConfigUtils.MONGO_DATABASE);
 		playercollection = mongoDatabase.getCollection("playerdata");
-		punishCollection = mongoDatabase.getCollection("punishments");
+		factionCollection = mongoDatabase.getCollection("factions");
+
+	}
+
+	public static void saveFactionToDatabase(PlayerFaction playerFaction){
+		List<String> allies = new ArrayList<>();
+		playerFaction.getAlliedFactions().forEach(playerFaction1 -> allies.add(playerFaction.getName()));
+
+		Document doc = new Document("uuid", playerFaction.getUniqueID())
+		.append("name", playerFaction.getName())
+		.append("players", playerFaction.getMembers().keySet())
+		.append("leader", playerFaction.getLeader().getUniqueId())
+		.append("allies", allies)
+		.append("balance", playerFaction.getBalance())
+		.append("dtr", playerFaction.getDeathsUntilRaidable());
+
+		Document found = factionCollection.find(new Document("uuid", playerFaction.getUniqueID())).first();
+		if(found != null){
+			Bson updateOperation = new Document("$set", doc);
+			factionCollection.updateOne(found, updateOperation);
+		}else{
+			factionCollection.insertOne(doc);
+		}
 
 	}
 
@@ -49,23 +71,18 @@ public class MongoDBDatabase {
 		Player player = playerProfile.getPlayer();
 
 		Document faction = new Document("faction", playerFaction != null);
-		if(playerFaction != null){
-			List<String> allies = new ArrayList<>();
-			playerFaction.getAlliedFactions().forEach(playerFaction1 -> allies.add(playerFaction.getName()));
-
+		if(playerFaction != null){ //Player has a faction. Save faction data into doc
 			faction.append("name", playerFaction.getName());
-			faction.append("players", playerFaction.getMembers().keySet());
-			faction.append("leader", playerFaction.getLeader().getUniqueId());
-			faction.append("allies", allies);
-			faction.append("balance", playerFaction.getBalance());
-			faction.append("dtr", playerFaction.getDeathsUntilRaidable());
+			faction.append("uuid", playerFaction.getUniqueID());
+			saveFactionToDatabase(playerFaction);
 		}
 
-
+		//This includes ores, kills/deaths and more to add!
 		Document profile = new Document("spawn-tokens", HCF.getInstance().getUserManager().getUser(player.getUniqueId()).getSpawnTokens())
 				.append("kills", player.getStatistic(Statistic.PLAYER_KILLS))
 				.append("deaths", player.getStatistic(Statistic.DEATHS))
 				.append("ores",
+						//Save player ores
 						new Document("diamonds", player.getStatistic(Statistic.MINE_BLOCK, Material.DIAMOND_ORE))
 								.append("gold", player.getStatistic(Statistic.MINE_BLOCK, Material.GOLD_ORE))
 								.append("coal", player.getStatistic(Statistic.MINE_BLOCK, Material.COAL_ORE))
@@ -75,6 +92,7 @@ public class MongoDBDatabase {
 								.append("emerald", player.getStatistic(Statistic.MINE_BLOCK, Material.EMERALD_ORE))
 				);
 
+		//Includes all player profile (faction, )
 		Document doc = new Document("uuid", player.getUniqueId())
 		.append("nickname", player.getName())
 		.append("address", playerProfile.getPlayerData().getAddress())
