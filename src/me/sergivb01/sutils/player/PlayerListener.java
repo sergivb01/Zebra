@@ -42,7 +42,10 @@ public class PlayerListener implements Listener{
 				.tooltip("Click to open your profile")
 				.send(player);
 
-		Cache.getPlayerProfile(player.getUniqueId()).save(true);
+		Bukkit.getScheduler().runTaskLaterAsynchronously(instance, ()->{
+			Cache.getPlayerProfile(player.getUniqueId()).save(true);
+			player.sendMessage(YELLOW + "Your profile has been saved.");
+		}, 20L);
 	}
 
 	@EventHandler

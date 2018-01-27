@@ -55,7 +55,7 @@ public class MongoDBDatabase {
 
 			faction.append("name", playerFaction.getName());
 			faction.append("players", playerFaction.getMembers().keySet());
-			faction.append("leader", playerFaction.getLeader().getName());
+			faction.append("leader", playerFaction.getLeader().getUniqueId());
 			faction.append("allies", allies);
 			faction.append("balance", playerFaction.getBalance());
 			faction.append("dtr", playerFaction.getDeathsUntilRaidable());
@@ -79,6 +79,7 @@ public class MongoDBDatabase {
 		.append("nickname", player.getName())
 		.append("address", playerProfile.getPlayerData().getAddress())
 		.append("lastconn", System.currentTimeMillis())
+		.append("server", ConfigUtils.SERVER_NAME)
 		.append("version", playerProfile.getPlayerData().getPlayerVersion().toString())
 		.append("online", online)
 		.append(ConfigUtils.SERVER_NAME, new Document("profile", profile)
