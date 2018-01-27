@@ -1,18 +1,21 @@
 package me.sergivb01.sutils.player;
 
 import me.sergivb01.sutils.ServerUtils;
-import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
+import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.player.data.PlayerProfile;
+import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
+import net.veilmc.base.BasePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.YELLOW;
 
 public class PlayerListener implements Listener{
 	private ServerUtils instance;
@@ -22,19 +25,6 @@ public class PlayerListener implements Listener{
 		Bukkit.getPluginManager().registerEvents(this, instance);
 		for(Player player : Bukkit.getOnlinePlayers()){
 			player.kickPlayer("Relog please.");
-		}
-	}
-
-	@EventHandler
-	public void onPreLogin(PlayerPreLoginEvent event){
-		if(MongoDBDatabase.isBlacklisted(event.getUniqueId())){
-			event.setKickMessage(RED + "Your access to "+ DARK_RED +"MyServer Network" + RED + " has been blocked. \n\n"
-					+ "You may appeal this blacklist @  ts.myserver.net"
-			);
-			event.setResult(PlayerPreLoginEvent.Result.KICK_BANNED);
-		}else if(MongoDBDatabase.getLastBan(event.getUniqueId()) != null){
-			event.setKickMessage(translateAlternateColorCodes('&', MongoDBDatabase.getLastBan(event.getUniqueId()).getString("reason")));
-			event.setResult(PlayerPreLoginEvent.Result.KICK_BANNED);
 		}
 	}
 
@@ -65,5 +55,17 @@ public class PlayerListener implements Listener{
 		Cache.removeProfile(player);
 	}
 
+
+	@EventHandler
+	public void onStaffChatChat(AsyncPlayerChatEvent event){
+		Player player = event.getPlayer();
+		if(!player.hasPermission("rank.staff")){
+			return;
+		}
+		if(BasePlugin.getPlugin().getUserManager().getUser(player.getUniqueId()).isInStaffChat()){//Staffchat
+			RedisDatabase.getPublisher().write("staffchat;" + player.getName() + ";" + ConfigUtils.SERVER_NAME + ";" + event.getMessage().replace(";", ":"));
+			event.setCancelled(true);
+		}
+	}
 
 }

@@ -1,9 +1,9 @@
 package me.sergivb01.sutils;
 
-import me.sergivb01.sutils.commands.punishments.actions.*;
-import me.sergivb01.sutils.commands.punishments.checks.AltsCommand;
-import me.sergivb01.sutils.commands.punishments.checks.CheckbanCommand;
-import me.sergivb01.sutils.commands.punishments.checks.HistoryCommand;
+import me.sergivb01.sutils.commands.staff.ReportCommand;
+import me.sergivb01.sutils.commands.staff.RequestCommand;
+import me.sergivb01.sutils.commands.staff.StaffChatCommand;
+import me.sergivb01.sutils.commands.staff.StaffServerCommand;
 import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.player.PlayerListener;
@@ -26,22 +26,19 @@ public class ServerUtils extends JavaPlugin{
 
 		ConfigUtils.updateConfig(this);
 
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
 		new PlayerListener(this); //Registers as event itself
 
 		new RedisDatabase(this);
 		new MongoDBDatabase(this);
 
-		//Actions
-		getCommand("ban").setExecutor(new BanCommand());
-		getCommand("blacklist").setExecutor(new BlacklistCommand());
-		getCommand("kick").setExecutor(new KickCommand());
-		getCommand("unban").setExecutor(new UnbanCommand());
-		getCommand("unblacklist").setExecutor(new UnblacklistCommand());
+		//Staff
+		getCommand("report").setExecutor(new ReportCommand());
+		getCommand("request").setExecutor(new RequestCommand());
+		getCommand("sc").setExecutor(new StaffChatCommand());
+		getCommand("staffserver").setExecutor(new StaffServerCommand(this));
 
-		//Checks
-		getCommand("alts").setExecutor(new AltsCommand());
-		getCommand("checkban").setExecutor(new CheckbanCommand());
-		getCommand("hist").setExecutor(new HistoryCommand());
 
 		Map<String, Map<String, Object>> map = getDescription().getCommands();
 		for (Map.Entry<String, Map<String, Object>> entry : map.entrySet()) {

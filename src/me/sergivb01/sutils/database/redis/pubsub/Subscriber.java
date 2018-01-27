@@ -42,69 +42,12 @@ public class Subscriber {
 					final String server = args[2];
 					final String msg = args[3];
 					switch (command) {
-						case "kickrequest":
-							Player playerTarget = Bukkit.getPlayer(sender);
-							if(playerTarget != null){
-								if(playerTarget.isOnline()){
-									Bukkit.getScheduler().runTask(instance, ()-> playerTarget.kickPlayer(ChatColor.translateAlternateColorCodes('&', msg)));
-								}
-							}
-							new FancyMessage("[Staff Only] ")
-									.color(BLUE)
-									.then("[" + server + "] ")
-									.color(AQUA)
-									.then(sender)
-									.color(GREEN)
-									.then(" has been KICKED for: ")
-									.color(YELLOW)
-									.then(msg)
-									.color(GRAY)
-									.send(getStaff());
-							break;
-						case "banmsg":
-							Player playerTarget2 = Bukkit.getPlayer(sender);
-							if(playerTarget2 != null){
-								if(playerTarget2.isOnline()){
-									Bukkit.getScheduler().runTask(instance, ()-> playerTarget2.kickPlayer(ChatColor.translateAlternateColorCodes('&', msg)));
-								}
-							}
-							new FancyMessage("[Staff Only] ")
-									.color(BLUE)
-									.then("[" + server + "] ")
-									.color(AQUA)
-									.then(sender)
-									.color(GREEN)
-									.then(" has been BANNED by ")
-									.color(YELLOW)
-									.then(args[4])
-									.color(GREEN)
-									.then(" for: ")
-									.color(YELLOW)
-									.then(msg)
-									.color(GRAY)
-									.send(getStaff());
-							break;
-						case "unbanmsg":
-							new FancyMessage("[Staff Only] ")
-									.color(BLUE)
-									.then("[" + server + "] ")
-									.color(AQUA)
-									.then(sender)
-									.color(GREEN)
-									.then(" has been UNBANNED by ")
-									.color(YELLOW)
-									.then(msg)
-									.color(GREEN)
-									.then(".")
-									.color(YELLOW)
-									.send(getStaff());
-							break;
 						case "staffchat":
 							new FancyMessage("(Staff) ")
 									.color(ChatColor.BLUE)
 									.then("[" + server + "] ")
 									.color(ChatColor.DARK_AQUA)
-									.command("/toserver " + server)
+									.command("/staffserver " + server)
 									.tooltip(GRAY + "Click to teleport to " + server)
 									.then(sender + ": ")
 									.color(ChatColor.AQUA)
@@ -115,7 +58,7 @@ public class Subscriber {
 									.color(BLUE)
 									.then("[" + server + "] ")
 									.color(GRAY)
-									.command("/toserver " + server)
+									.command("/staffserver " + server)
 									.tooltip(GRAY + "Click to teleport to " + server)
 									.then(sender)
 									.color(AQUA)
@@ -133,7 +76,7 @@ public class Subscriber {
 									.color(RED)
 									.then("[" + server + "] ")
 									.color(GRAY)
-									.command("/toserver " + server)
+									.command("/staffserver " + server)
 									.tooltip(GRAY + "Click to teleport to " + server)
 									.then(reportedPlayer)
 									.color(AQUA)

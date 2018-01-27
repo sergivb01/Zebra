@@ -3,11 +3,8 @@ main: me.sergivb01.sutils.ServerUtils
 version: 1.0
 author: sergivb01
 commands:
-  blacklist:
-  unblacklist:
-  ban:
-  unban:
-  checkban:
-  alts:
-  hist:
-  kick:
+  sc:
+  report:
+  staffserver:
+  request:
+    aliases: [helpop]
