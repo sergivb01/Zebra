@@ -15,11 +15,8 @@ import org.bson.conversions.Bson;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.PlayerDeathEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class MongoDBDatabase {
 	private ServerUtils instance;
@@ -47,32 +44,11 @@ public class MongoDBDatabase {
 
 	}
 
-	public static void handleDeath(PlayerDeathEvent event){
-		if(event.getEntity().getKiller() != null && event.getEntity() != null){
-				handleCombat(event.getEntity().getUniqueId(), event.getEntity().getKiller().getUniqueId(), event.getDeathMessage());
-				return;
-		}
-
-		if(event.getEntity() != null){
-			Document document = new Document("dead", event.getEntity().getUniqueId())
-					.append("killer", "ENVIROMENT")
-					.append("deathmsg", event.getDeathMessage())
-					.append("timestamp", System.currentTimeMillis());
-		}
-
-	}
-
-	public static void handleCombat(UUID deadUUID, UUID killerUUID, String deathMessage){
-		Document document = new Document("dead", deadUUID)
-				.append("killer", killerUUID)
-				.append("deathmsg", deathMessage)
-				.append("timestamp", System.currentTimeMillis());
-	}
 
 	public static void addPlayerDeath(UUID playerUUID, Document document){
 		Document found = playercollection.find(new Document("uuid", playerUUID)).first();
 		if(found != null) {
-			Bson updateOperation = new Document("$push", new Document("deaths", document));
+			Bson updateOperation = new Document("$push", new Document(ConfigUtils.SERVER_NAME + ".death-tracker", document));
 			playercollection.updateOne(found, updateOperation);
 		}
 	}
@@ -97,6 +73,23 @@ public class MongoDBDatabase {
 			factionCollection.insertOne(doc);
 		}
 
+	}
+
+	public static String getInventoryAsJSON(Player player){
+		Map<String, String> invMap = new HashMap<>();
+
+		for(int i = 0; i < player.getInventory().getContents().length; i++){
+			invMap.put(String.valueOf(i), (player.getInventory().getItem(i) == null) ? Material.AIR.toString() : player.getInventory().getItem(i).getType().toString());
+		}
+
+		Map<String, String> armorMap = new HashMap<>();
+		for(int i = 0; i < player.getInventory().getArmorContents().length; i++){
+			armorMap.put(String.valueOf(i), (player.getInventory().getArmorContents()[i] == null) ? Material.AIR.toString() : player.getInventory().getArmorContents()[i].getType().toString());
+		}
+
+		Document finalDoc = new Document("armor", armorMap)
+				.append("inventory", invMap);
+		return finalDoc.toJson();
 	}
 
 	public static void saveProfileToDatabase(PlayerProfile playerProfile, boolean online){

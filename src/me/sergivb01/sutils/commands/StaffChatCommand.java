@@ -1,4 +1,4 @@
-package me.sergivb01.sutils.commands.staff;
+package me.sergivb01.sutils.commands;
 
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.utils.ConfigUtils;

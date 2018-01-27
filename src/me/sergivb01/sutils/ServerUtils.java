@@ -1,5 +1,6 @@
 package me.sergivb01.sutils;
 
+import me.sergivb01.sutils.commands.*;
 import me.sergivb01.sutils.commands.staff.*;
 import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import me.sergivb01.sutils.database.redis.RedisDatabase;

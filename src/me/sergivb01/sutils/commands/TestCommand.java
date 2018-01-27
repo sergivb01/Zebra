@@ -1,7 +1,6 @@
-package me.sergivb01.sutils.commands.staff;
+package me.sergivb01.sutils.commands;
 
 import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
-import org.bson.Document;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,7 +16,7 @@ public class TestCommand implements CommandExecutor{
 
 		Player player = (Player)sender;
 
-		MongoDBDatabase.addPlayerDeath(player.getUniqueId(), new Document("test", "holaa").append("hola", 1234));
+		MongoDBDatabase.getInventoryAsJSON(player);
 		return true;
 	}
 
