@@ -9,6 +9,7 @@ import me.sergivb01.sutils.player.data.PlayerProfile;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import net.veilmc.base.BasePlugin;
 import net.veilmc.hcf.HCF;
+import net.veilmc.hcf.deathban.Deathban;
 import net.veilmc.hcf.faction.type.PlayerFaction;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -49,6 +50,19 @@ public class MongoDBDatabase {
 		Document found = playercollection.find(new Document("uuid", playerUUID)).first();
 		if(found != null) {
 			Bson updateOperation = new Document("$push", new Document(ConfigUtils.SERVER_NAME + ".death-tracker", document));
+			playercollection.updateOne(found, updateOperation);
+		}
+	}
+
+	public static void setDeathban(UUID playerUUID, Deathban deathban){
+		Document document = new Document("reason", deathban.getReason())
+				.append("created", deathban.getCreationMillis())
+				.append("expires", deathban.getExpiryMillis())
+				.append("location", deathban.getDeathPoint().getX() + ";" + deathban.getDeathPoint().getY() + ";" + deathban.getDeathPoint().getZ());
+
+		Document found = playercollection.find(new Document("uuid", playerUUID)).first();
+		if(found != null) {
+			Bson updateOperation = new Document("$set", new Document(ConfigUtils.SERVER_NAME + ".deathban", document));
 			playercollection.updateOne(found, updateOperation);
 		}
 	}
