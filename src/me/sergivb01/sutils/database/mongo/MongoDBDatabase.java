@@ -49,6 +49,13 @@ public class MongoDBDatabase {
 
 	}
 
+	public static void addDeathSave(Document document){
+		deathCollection.insertOne(document);
+		if(ConfigUtils.DEBUG){
+			System.out.println("Added death save! " + document.toJson());
+		}
+	}
+
 	private static void saveFactionToDatabase (PlayerFaction playerFaction){
 		List<String> allies = new ArrayList<>();
 		playerFaction.getAlliedFactions().forEach(playerFaction1 -> allies.add(playerFaction.getName()));
