@@ -8,21 +8,25 @@ import me.sergivb01.sutils.utils.fanciful.FancyMessage;
 import net.veilmc.base.BasePlugin;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import static me.sergivb01.sutils.database.mongo.MongoDBDatabase.addPlayerDeath;
+import java.util.UUID;
+
+import static me.sergivb01.sutils.database.mongo.MongoDBDatabase.addDeathSave;
 import static me.sergivb01.sutils.database.mongo.MongoDBDatabase.getInventoryAsJSON;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.YELLOW;
 
 public class PlayerListener implements Listener{
-	private ServerUtils instance;
+	private static ServerUtils instance;
 
 	public PlayerListener(ServerUtils instance){
 		this.instance = instance;
@@ -55,10 +59,8 @@ public class PlayerListener implements Listener{
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event){
 		Player player = event.getPlayer();
-		Bukkit.getScheduler().runTaskAsynchronously(instance, ()->{
-			Cache.getPlayerProfile(player.getUniqueId()).save(false);
-			Cache.removeProfile(player);
-		});
+		Cache.getPlayerProfile(player.getUniqueId()).save(false);
+		Cache.removeProfile(player);
 	}
 
 
@@ -74,33 +76,37 @@ public class PlayerListener implements Listener{
 		}
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled=true, priority= EventPriority.HIGH)
 	public void onPlayerDeath(PlayerDeathEvent event){
-		if(event.getEntity().getKiller() != null && event.getEntity() != null){
-			Document document = new Document("dead", event.getEntity().getUniqueId())
-					.append("killer", event.getEntity().getKiller().getUniqueId())
-					.append("deathmsg", event.getDeathMessage())
-					.append("location", event.getEntity().getLocation().toString())
-					.append("content-death", getInventoryAsJSON(event.getEntity()))
-					.append("content-killer", getInventoryAsJSON(event.getEntity().getKiller()))
-					.append("timestamp", System.currentTimeMillis());
+		UUID playerUUID = event.getEntity().getUniqueId();
+		UUID killerUUID = (event.getEntity().getKiller() != null) ? event.getEntity().getKiller().getUniqueId() : null;
+		String deathMSG = event.getDeathMessage();
 
-			addPlayerDeath(event.getEntity().getUniqueId(), document);
-			addPlayerDeath(event.getEntity().getKiller().getUniqueId(), document);
-			return;
+		Location location = event.getEntity().getLocation();
+
+		UUID deathID = UUID.randomUUID();
+		Document document = new Document("death-id", deathID)
+				.append("dead", playerUUID)
+				.append("killer", (killerUUID != null) ? killerUUID : "ENVIRONMENT")
+				.append("deathmsg", deathMSG)
+				.append("location", location.getBlockX() + ";" + location.getBlockY() + ";" + location.getBlockZ())
+				.append("content-death", getInventoryAsJSON(event.getEntity())) //TODO: Is always air :(
+				.append("content-killer", (killerUUID != null) ? getInventoryAsJSON(event.getEntity().getKiller()) : "none")
+				.append("timestamp", System.currentTimeMillis());
+
+		addDeathSave(playerUUID, deathID, document);
+		if(event.getEntity().getKiller() != null) {
+			addDeathSave(event.getEntity().getKiller().getUniqueId(), deathID, document);
 		}
 
-		if(event.getEntity() != null){
-			Document document = new Document("dead", event.getEntity().getUniqueId())
-					.append("killer", "ENVIROMENT")
-					.append("deathmsg", event.getDeathMessage())
-					.append("location", event.getEntity().getLocation().toString())
-					.append("content-death", getInventoryAsJSON(event.getEntity()))
-					.append("content-killer", "none")
-					.append("timestamp", System.currentTimeMillis());
-			addPlayerDeath(event.getEntity().getUniqueId(), document);
-		}
 	}
 
+	public static void doAsync(Runnable runnable){
+		Bukkit.getScheduler().runTaskAsynchronously(instance, runnable);
+	}
 
+	public static void doAsyncLater(Runnable runnable, long delay){
+		Bukkit.getScheduler().runTaskLaterAsynchronously(instance, runnable, delay);
+	}
+	
 }

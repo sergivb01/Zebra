@@ -3,6 +3,8 @@ package me.sergivb01.sutils.utils;
 import me.sergivb01.sutils.ServerUtils;
 
 public class ConfigUtils {
+	public static boolean DEBUG = true;
+
 	public static String REDIS_HOST = "localhost";
 	public static int REDIS_PORT = 6379;
 	public static int REDIS_TIMEOUT = 2000;

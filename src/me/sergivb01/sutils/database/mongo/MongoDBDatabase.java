@@ -25,6 +25,7 @@ public class MongoDBDatabase {
 	private static MongoDatabase mongoDatabase;
 	public static MongoCollection<Document> playercollection;
 	public static MongoCollection<Document> factionCollection;
+	public static MongoCollection<Document> deathCollection;
 
 	public MongoDBDatabase (ServerUtils instance){
 		this.instance = instance;
@@ -42,28 +43,43 @@ public class MongoDBDatabase {
 		mongoDatabase = mongoClient.getDatabase(ConfigUtils.MONGO_DATABASE);
 		playercollection = mongoDatabase.getCollection("playerdata");
 		factionCollection = mongoDatabase.getCollection("factions");
+		deathCollection = mongoDatabase.getCollection("deaths");
 
 	}
 
+	public static void addDeathSave(UUID playerUUID, UUID deathID, Document document){
+		deathCollection.insertOne(document);
+		if(ConfigUtils.DEBUG){
+			System.out.println("Added death save! " + document.toJson());
+		}
+		addDeathIDToPlayerProfile(playerUUID, deathID);
+	}
 
-	public static void addPlayerDeath(UUID playerUUID, Document document){
+	private static void addDeathIDToPlayerProfile(UUID playerUUID, UUID deathID){
 		Document found = playercollection.find(new Document("uuid", playerUUID)).first();
 		if(found != null) {
-			Bson updateOperation = new Document("$push", new Document(ConfigUtils.SERVER_NAME + ".death-tracker", document));
+			Bson updateOperation = new Document("$push", new Document(ConfigUtils.SERVER_NAME + ".death-tracker", deathID));
 			playercollection.updateOne(found, updateOperation);
+			if(ConfigUtils.DEBUG){
+				System.out.println("Pushed deathID "+ deathID +" to death-tracker to " + playerUUID.toString());
+			}
 		}
 	}
 
-	public static void setDeathban(UUID playerUUID, Deathban deathban){
+	public static void setDeathban(UUID playerUUID, Deathban deathban){ //USED BY HCF PLUGIN
 		Document document = new Document("reason", deathban.getReason())
 				.append("created", deathban.getCreationMillis())
 				.append("expires", deathban.getExpiryMillis())
-				.append("location", deathban.getDeathPoint().getX() + ";" + deathban.getDeathPoint().getY() + ";" + deathban.getDeathPoint().getZ());
+				.append("location", deathban.getDeathPoint().getBlockX() + ";" + deathban.getDeathPoint().getBlockY() + ";" + deathban.getDeathPoint().getBlockZ());
 
 		Document found = playercollection.find(new Document("uuid", playerUUID)).first();
 		if(found != null) {
 			Bson updateOperation = new Document("$set", new Document(ConfigUtils.SERVER_NAME + ".deathban", document));
 			playercollection.updateOne(found, updateOperation);
+
+			if(ConfigUtils.DEBUG) { //Do debug
+				System.out.println("Saved " + playerUUID + " deathban! " + document.toJson());
+			}
 		}
 	}
 
@@ -150,7 +166,7 @@ public class MongoDBDatabase {
 
 		Document found = playercollection.find(new Document("uuid", player.getUniqueId())).first();
 		if(found != null){
-			Bson updateOperation = new Document("$set", doc);
+			Bson updateOperation = new Document("$setOnInsert", doc);
 			playercollection.updateOne(found, updateOperation);
 		}else{
 			playercollection.insertOne(doc);
