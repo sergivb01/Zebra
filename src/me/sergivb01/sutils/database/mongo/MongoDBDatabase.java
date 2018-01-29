@@ -108,12 +108,12 @@ public class MongoDBDatabase {
 	public static String getInventoryAsJSON(Player player){
 		Map<String, String> invMap = new HashMap<>();
 
-		for(int i = 0; i < player.getInventory().getContents().length; i++){
+		for(int i = 0; i < 35; i++){
 			invMap.put(String.valueOf(i), (player.getInventory().getItem(i) == null) ? Material.AIR.toString() : player.getInventory().getItem(i).getType().toString());
 		}
 
 		Map<String, String> armorMap = new HashMap<>();
-		for(int i = 0; i < player.getInventory().getArmorContents().length; i++){
+		for(int i = 0; i < 4; i++){
 			armorMap.put(String.valueOf(i), (player.getInventory().getArmorContents()[i] == null) ? Material.AIR.toString() : player.getInventory().getArmorContents()[i].getType().toString());
 		}
 
