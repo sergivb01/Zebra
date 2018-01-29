@@ -1,27 +1,19 @@
 package me.sergivb01.sutils.player;
 
 import me.sergivb01.sutils.ServerUtils;
+import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
-import me.sergivb01.sutils.player.data.PlayerProfile;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
 import net.veilmc.base.BasePlugin;
-import org.bson.Document;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.UUID;
-
-import static me.sergivb01.sutils.database.mongo.MongoDBDatabase.addDeathSave;
-import static me.sergivb01.sutils.database.mongo.MongoDBDatabase.getInventoryAsJSON;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.YELLOW;
 
@@ -32,15 +24,13 @@ public class PlayerListener implements Listener{
 		this.instance = instance;
 		Bukkit.getPluginManager().registerEvents(this, instance);
 		for(Player player : Bukkit.getOnlinePlayers()){
-			player.performCommand("hub");
+			Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(player, "placeholder"));
 		}
 	}
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event){
 		Player player = event.getPlayer();
-		PlayerProfile playerProfile = new PlayerProfile(player);
-		Cache.addProfile(player.getUniqueId(), playerProfile);
 
 		new FancyMessage("Your profile is available at ")
 				.color(YELLOW)
@@ -50,8 +40,8 @@ public class PlayerListener implements Listener{
 				.tooltip("Click to open your profile")
 				.send(player);
 
-		Bukkit.getScheduler().runTaskLaterAsynchronously(instance, ()->{
-			Cache.getPlayerProfile(player.getUniqueId()).save(true);
+		doAsyncLater(()->{
+			MongoDBDatabase.saveProfileToDatabase(player, true);
 			player.sendMessage(YELLOW + "Your profile has been saved.");
 		}, 20L);
 	}
@@ -59,10 +49,9 @@ public class PlayerListener implements Listener{
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event){
 		Player player = event.getPlayer();
-		Cache.getPlayerProfile(player.getUniqueId()).save(false);
-		Cache.removeProfile(player);
+		MongoDBDatabase.saveProfileToDatabase(player, false);
+		//TODO: Server switch
 	}
-
 
 	@EventHandler
 	public void onStaffChatChat(AsyncPlayerChatEvent event){
@@ -76,37 +65,10 @@ public class PlayerListener implements Listener{
 		}
 	}
 
-	@EventHandler(ignoreCancelled=true, priority= EventPriority.HIGH)
-	public void onPlayerDeath(PlayerDeathEvent event){
-		UUID playerUUID = event.getEntity().getUniqueId();
-		UUID killerUUID = (event.getEntity().getKiller() != null) ? event.getEntity().getKiller().getUniqueId() : null;
-		String deathMSG = event.getDeathMessage();
+	//TODO: Death tracker using MongoDBDatabase.saveProfileToDatabase()
 
-		Location location = event.getEntity().getLocation();
-
-		UUID deathID = UUID.randomUUID();
-		Document document = new Document("death-id", deathID)
-				.append("dead", playerUUID)
-				.append("killer", (killerUUID != null) ? killerUUID : "ENVIRONMENT")
-				.append("deathmsg", deathMSG)
-				.append("location", location.getBlockX() + ";" + location.getBlockY() + ";" + location.getBlockZ())
-				.append("content-death", getInventoryAsJSON(event.getEntity())) //TODO: Is always air :(
-				.append("content-killer", (killerUUID != null) ? getInventoryAsJSON(event.getEntity().getKiller()) : "none")
-				.append("timestamp", System.currentTimeMillis());
-
-		addDeathSave(playerUUID, deathID, document);
-		if(event.getEntity().getKiller() != null) {
-			addDeathSave(event.getEntity().getKiller().getUniqueId(), deathID, document);
-		}
-
-	}
-
-	public static void doAsync(Runnable runnable){
-		Bukkit.getScheduler().runTaskAsynchronously(instance, runnable);
-	}
-
-	public static void doAsyncLater(Runnable runnable, long delay){
+	private static void doAsyncLater (Runnable runnable, long delay){
 		Bukkit.getScheduler().runTaskLaterAsynchronously(instance, runnable, delay);
 	}
-	
+
 }

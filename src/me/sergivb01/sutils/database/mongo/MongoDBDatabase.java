@@ -5,7 +5,7 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import me.sergivb01.sutils.ServerUtils;
-import me.sergivb01.sutils.player.data.PlayerProfile;
+import me.sergivb01.sutils.enums.PlayerVersion;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import net.veilmc.base.BasePlugin;
 import net.veilmc.hcf.HCF;
@@ -15,9 +15,11 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MongoDBDatabase {
 	private ServerUtils instance;
@@ -47,53 +49,17 @@ public class MongoDBDatabase {
 
 	}
 
-	public static void addDeathSave(UUID playerUUID, UUID deathID, Document document){
-		deathCollection.insertOne(document);
-		if(ConfigUtils.DEBUG){
-			System.out.println("Added death save! " + document.toJson());
-		}
-		addDeathIDToPlayerProfile(playerUUID, deathID);
-	}
-
-	private static void addDeathIDToPlayerProfile(UUID playerUUID, UUID deathID){
-		Document found = playercollection.find(new Document("uuid", playerUUID)).first();
-		if(found != null) {
-			Bson updateOperation = new Document("$push", new Document(ConfigUtils.SERVER_NAME + ".death-tracker", deathID));
-			playercollection.updateOne(found, updateOperation);
-			if(ConfigUtils.DEBUG){
-				System.out.println("Pushed deathID "+ deathID +" to death-tracker to " + playerUUID.toString());
-			}
-		}
-	}
-
-	public static void setDeathban(UUID playerUUID, Deathban deathban){ //USED BY HCF PLUGIN
-		Document document = new Document("reason", deathban.getReason())
-				.append("created", deathban.getCreationMillis())
-				.append("expires", deathban.getExpiryMillis())
-				.append("location", deathban.getDeathPoint().getBlockX() + ";" + deathban.getDeathPoint().getBlockY() + ";" + deathban.getDeathPoint().getBlockZ());
-
-		Document found = playercollection.find(new Document("uuid", playerUUID)).first();
-		if(found != null) {
-			Bson updateOperation = new Document("$set", new Document(ConfigUtils.SERVER_NAME + ".deathban", document));
-			playercollection.updateOne(found, updateOperation);
-
-			if(ConfigUtils.DEBUG) { //Do debug
-				System.out.println("Saved " + playerUUID + " deathban! " + document.toJson());
-			}
-		}
-	}
-
-	public static void saveFactionToDatabase(PlayerFaction playerFaction){
+	private static void saveFactionToDatabase (PlayerFaction playerFaction){
 		List<String> allies = new ArrayList<>();
 		playerFaction.getAlliedFactions().forEach(playerFaction1 -> allies.add(playerFaction.getName()));
 
 		Document doc = new Document("uuid", playerFaction.getUniqueID()) //Unique identifier by faction, as player UUID
-		.append("name", playerFaction.getName())
-		.append("players", playerFaction.getMembers().keySet())
-		.append("leader", playerFaction.getLeader().getUniqueId())
-		.append("allies", allies)
-		.append("balance", playerFaction.getBalance())
-		.append("dtr", playerFaction.getDeathsUntilRaidable());
+				.append("name", playerFaction.getName())
+				.append("players", playerFaction.getMembers().keySet())
+				.append("leader", playerFaction.getLeader().getUniqueId())
+				.append("allies", allies)
+				.append("balance", playerFaction.getBalance())
+				.append("dtr", playerFaction.getDeathsUntilRaidable());
 
 		Document found = factionCollection.find(new Document("uuid", playerFaction.getUniqueID())).first();
 		if(found != null){
@@ -105,31 +71,30 @@ public class MongoDBDatabase {
 
 	}
 
-	public static String getInventoryAsJSON(Player player){
-		Map<String, String> invMap = new HashMap<>();
-
-		for(int i = 0; i < 35; i++){
-			invMap.put(String.valueOf(i), (player.getInventory().getItem(i) == null) ? Material.AIR.toString() : player.getInventory().getItem(i).getType().toString());
+	public static void saveProfileToDatabase(Player player, boolean online){
+		PlayerFaction faction = HCF.getPlugin().getFactionManager().getPlayerFaction(player.getUniqueId());
+		if(faction != null){
+			saveFactionToDatabase(faction);
 		}
 
-		Map<String, String> armorMap = new HashMap<>();
-		for(int i = 0; i < 4; i++){
-			armorMap.put(String.valueOf(i), (player.getInventory().getArmorContents()[i] == null) ? Material.AIR.toString() : player.getInventory().getArmorContents()[i].getType().toString());
-		}
-
-		Document finalDoc = new Document("armor", armorMap)
-				.append("inventory", invMap);
-		return finalDoc.toJson();
-	}
-
-	public static void saveProfileToDatabase(PlayerProfile playerProfile, boolean online){
-		Player player = playerProfile.getPlayer();
+		Deathban deathban = HCF.getPlugin().getUserManager().getUser(player.getUniqueId()).getDeathban();
 
 		//This includes ores, kills/deaths and more to add!
 		Document profile = new Document("spawn-tokens", HCF.getInstance().getUserManager().getUser(player.getUniqueId()).getSpawnTokens())
 				.append("kills", player.getStatistic(Statistic.PLAYER_KILLS))
 				.append("deaths", player.getStatistic(Statistic.DEATHS))
 				.append("notes", BasePlugin.getPlugin().getUserManager().getUser(player.getUniqueId()).getNotes())
+				.append("deathban",
+						//Save deathban
+						new Document("reason", (deathban != null) ? deathban.getReason() : "none")
+						.append("created", (deathban != null) ? deathban.getCreationMillis() : "none")
+						.append("expires", (deathban != null) ? deathban.getExpiryMillis() : "none")
+						.append("location", (deathban != null) ? deathban.getDeathPoint().getBlockX() + ";" + deathban.getDeathPoint().getBlockY() + ";" + deathban.getDeathPoint().getBlockZ() : "none"))
+				.append("faction",
+						//Save faction
+						new Document("name", (faction != null) ? faction.getName() : "none")
+								.append("role", (faction != null) ? faction.getMember(player.getUniqueId()).getRole().toString() : "none")
+								.append("id", (faction != null) ? faction.getUniqueID() : "none"))
 				.append("ores",
 						//Save player ores
 						new Document("diamonds", player.getStatistic(Statistic.MINE_BLOCK, Material.DIAMOND_ORE))
@@ -142,35 +107,34 @@ public class MongoDBDatabase {
 				);
 
 
-		PlayerFaction playerFaction = HCF.getPlugin().getFactionManager().getPlayerFaction(playerProfile.getPlayer().getUniqueId());
-
-		Document faction = new Document("faction", playerFaction != null);
-		if(playerFaction != null){ //Player has a faction. Save faction data into doc
-			faction.append("name", playerFaction.getName());
-			faction.append("uuid", playerFaction.getUniqueID());
-			saveFactionToDatabase(playerFaction);
-		}
-
-
 		//Includes all player profile (faction, )
 		Document doc = new Document("uuid", player.getUniqueId())
 		.append("nickname", player.getName())
-		.append("address", playerProfile.getPlayerData().getAddress())
+		.append("address", player.getAddress().getHostString())
 		.append("lastconn", System.currentTimeMillis())
 		.append("server", ConfigUtils.SERVER_NAME)
-		.append("version", playerProfile.getPlayerData().getPlayerVersion().toString())
+		.append("version", getVersionForPlayer(player).toString())
 		.append("online", online)
-		.append(ConfigUtils.SERVER_NAME, new Document("profile", profile)
-				.append("faction", faction)
-		);
+		.append(ConfigUtils.SERVER_NAME, new Document("profile", profile));
 
 		Document found = playercollection.find(new Document("uuid", player.getUniqueId())).first();
 		if(found != null){
-			Bson updateOperation = new Document("$setOnInsert", doc);
+			Bson updateOperation = new Document("$set", doc);
 			playercollection.updateOne(found, updateOperation);
 		}else{
 			playercollection.insertOne(doc);
 		}
+	}
+
+
+	private static PlayerVersion getVersionForPlayer (Player player){
+		int version = ((CraftPlayer) player).getHandle().playerConnection.networkManager.getVersion();
+		if(version >= 47){
+			return  PlayerVersion.Version_1_8;
+		}else if (version == 5 || version == 4){
+			return PlayerVersion.Version_1_7;
+		}
+		return PlayerVersion.UNKOWN;
 	}
 
 }
