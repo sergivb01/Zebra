@@ -132,6 +132,7 @@ public class Subscriber {
 									.color(BLUE)
 									.then("[" + server + "]")
 									.color(DARK_AQUA)
+									.command("/staffserver " + server)
 									.then(sender + " has " + msg + ".")
 									.color(AQUA)
 									.send(getStaff());
