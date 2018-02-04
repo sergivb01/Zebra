@@ -132,7 +132,7 @@ public class Subscriber {
 									.color(BLUE)
 									.then("[" + server + "]")
 									.color(DARK_AQUA)
-									.then(sender + " " + msg)
+									.then(sender + " has " + msg + ".")
 									.color(AQUA)
 									.send(getStaff());
 							break;

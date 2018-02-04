@@ -52,13 +52,14 @@ public class PlayerListener implements Listener{
 			MongoDBDatabase.saveProfileToDatabase(player, true);
 			player.sendMessage(YELLOW + "Your profile has been saved.");
 		}, 20L);
+		RedisDatabase.getPublisher().write("staffswitch;" + player.getName()+ ";" + ConfigUtils.SERVER_NAME + ";joined");
 	}
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event){
 		Player player = event.getPlayer();
 		MongoDBDatabase.saveProfileToDatabase(player, false);
-		//TODO: Server switch
+		RedisDatabase.getPublisher().write("staffswitch;" + player.getName()+ ";" + ConfigUtils.SERVER_NAME + ";quit");
 	}
 
 	@EventHandler
