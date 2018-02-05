@@ -1,6 +1,9 @@
 server:
   name: "hcf"
 
+agent:
+  key: "something"
+
 database:
   redis:
     host: "localhost"

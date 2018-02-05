@@ -1,6 +1,7 @@
 package me.sergivb01.sutils;
 
 import me.sergivb01.sutils.commands.*;
+import me.sergivb01.sutils.database.agent.AgentManager;
 import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.player.PlayerListener;
@@ -29,6 +30,7 @@ public class ServerUtils extends JavaPlugin{
 
 		new RedisDatabase(this);
 		new MongoDBDatabase(this);
+		new AgentManager(this);
 
 		//Staff
 		getCommand("report").setExecutor(new ReportCommand());
