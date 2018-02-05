@@ -2,7 +2,6 @@ package me.sergivb01.sutils.database.agent;
 
 import com.instrumentalapp.Agent;
 import me.sergivb01.sutils.ServerUtils;
-import me.sergivb01.sutils.utils.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,12 +16,12 @@ public class PlayerAnalytics implements Listener{
 
 	@EventHandler
 	public void onPlayerJoin(){
-		agent.increment(ConfigUtils.SERVER_NAME + ".online", +1, System.currentTimeMillis());
+		//TODO: Something
 	}
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event){
-		agent.increment(ConfigUtils.SERVER_NAME + ".online", -1, System.currentTimeMillis());
+		//TODO: Something
 	}
 
 	static {
