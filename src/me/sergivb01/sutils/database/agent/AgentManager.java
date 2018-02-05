@@ -21,7 +21,6 @@ public class AgentManager {
 		Runtime runtime = Runtime.getRuntime();
 		Bukkit.getScheduler().scheduleAsyncRepeatingTask(instance, ()->{
 			agent.gauge(ConfigUtils.SERVER_NAME + ".tps", Bukkit.spigot().getTPS()[0]);
-			agent.gauge(ConfigUtils.SERVER_NAME + ".online", Bukkit.getOnlinePlayers().size());
 			agent.gauge(ConfigUtils.SERVER_NAME + ".freememory", runtime.freeMemory() / 1024);
 		}, 20L, 5 * 20L);
 	}
