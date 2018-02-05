@@ -67,19 +67,21 @@ public class Subscriber {
 							break;
 
 						case "koth":
-							new FancyMessage("[Koth Alert] ")
-									.color(YELLOW)
+							new FancyMessage(DARK_GRAY + "[" + BLUE + server + DARK_GRAY + "]")
+									.then("Event ")
+									.color(BLUE)
 									.then(sender)
-									.color(GOLD)
+									.color(WHITE)
 									.then(" is now running on ")
-									.color(YELLOW)
+									.color(BLUE)
 									.then(server)
-									.color(GOLD)
+									.command("/staffserver " + server)
+									.tooltip(AQUA + "Click to go to " + server)
+									.color(WHITE)
 									.then("!")
-									.color(YELLOW)
+									.color(BLUE)
 									.send(Bukkit.getOnlinePlayers());
 							break;
-
 						case "staffchat":
 							new FancyMessage("(Staff) ")
 									.color(BLUE)
