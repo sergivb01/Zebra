@@ -132,7 +132,7 @@ public class Subscriber {
 						case "staffswitch":
 							new FancyMessage("(Staff) ")
 									.color(BLUE)
-									.then("[" + server + "]")
+									.then("[" + server + "] ")
 									.color(DARK_AQUA)
 									.command("/staffserver " + server)
 									.then(sender + " has " + msg + ".")
