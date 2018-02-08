@@ -59,7 +59,7 @@ public class Subscriber {
 					final String msg = args[3];
 					switch (command) {
 						case "serverstatus":
-							//TODO: Actually, I should save this via Cache insted of just debugging
+							//TODO: Parse this to server system cache
 							System.out.println("==============================================================");
 							System.out.println("Server: " + sender);
 							System.out.println("Status: " + server);
