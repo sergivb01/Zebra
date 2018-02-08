@@ -29,7 +29,7 @@ public class ServerUtils extends JavaPlugin{
 		new PlayerListener(this); //Registers as event itself
 
 		new RedisDatabase(this);
-		new MongoDBDatabase(this);
+		new MongoDBDatabase();
 		new AgentManager(this);
 
 		//Staff

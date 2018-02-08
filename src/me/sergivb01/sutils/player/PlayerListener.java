@@ -26,7 +26,7 @@ import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.YELLOW;
 
 public class PlayerListener implements Listener{
-	private static ServerUtils instance;
+	private ServerUtils instance;
 
 	public PlayerListener(ServerUtils instance){
 		this.instance = instance;
@@ -95,7 +95,7 @@ public class PlayerListener implements Listener{
 		addDeathSave(document);
 	}
 
-	private static void doAsyncLater (Runnable runnable, long delay){
+	private void doAsyncLater (Runnable runnable, long delay){
 		Bukkit.getScheduler().runTaskLaterAsynchronously(instance, runnable, delay);
 	}
 
