@@ -4,7 +4,6 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import me.sergivb01.sutils.ServerUtils;
 import me.sergivb01.sutils.enums.PlayerVersion;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import net.veilmc.base.BasePlugin;
@@ -22,15 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MongoDBDatabase {
-	private ServerUtils instance;
-	private MongoClient mongoClient;
-	private static MongoDatabase mongoDatabase;
-	public static MongoCollection<Document> playercollection;
-	public static MongoCollection<Document> factionCollection;
-	public static MongoCollection<Document> deathCollection;
+	private static MongoCollection<Document> playercollection;
+	private static MongoCollection<Document> factionCollection;
+	private static MongoCollection<Document> deathCollection;
 
-	public MongoDBDatabase (ServerUtils instance){
-		this.instance = instance;
+	public MongoDBDatabase (){
 		init();
 	}
 
@@ -41,8 +36,10 @@ public class MongoDBDatabase {
 		}else{
 			uri = new MongoClientURI("mongodb://" + ConfigUtils.MONGO_HOST + ":" +  ConfigUtils.MONGO_PORT + "/?authSource=" + ConfigUtils.MONGO_DATABASE);
 		}
-		mongoClient = new MongoClient(uri);
-		mongoDatabase = mongoClient.getDatabase(ConfigUtils.MONGO_DATABASE);
+
+		MongoClient mongoClient = new MongoClient(uri);
+
+		MongoDatabase mongoDatabase = mongoClient.getDatabase(ConfigUtils.MONGO_DATABASE);
 		playercollection = mongoDatabase.getCollection("playerdata");
 		factionCollection = mongoDatabase.getCollection("factions");
 		deathCollection = mongoDatabase.getCollection("deaths");

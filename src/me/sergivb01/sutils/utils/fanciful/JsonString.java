@@ -1,11 +1,11 @@
 package me.sergivb01.sutils.utils.fanciful;
 
+import com.google.gson.stream.JsonWriter;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.gson.stream.JsonWriter;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 /**
  * Represents a JSON string value.
@@ -30,7 +30,7 @@ final class JsonString implements JsonRepresentedObject, ConfigurationSerializab
 	}
 
 	public Map<String, Object> serialize() {
-		HashMap<String, Object> theSingleValue = new HashMap<String, Object>();
+		HashMap<String, Object> theSingleValue = new HashMap<>();
 		theSingleValue.put("stringValue", _value);
 		return theSingleValue;
 	}
