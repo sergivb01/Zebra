@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static org.bukkit.ChatColor.*;
 
@@ -155,14 +155,8 @@ public class Subscriber {
 
 	}
 
-	private List<Player> getStaff(){
-		List<Player> staff = new ArrayList<>();
-		for(Player player : Bukkit.getOnlinePlayers()){
-			if(player.hasPermission("rank.staff")){
-				staff.add(player);
-			}
-		}
-		return staff;
+	private Collection<Player> getStaff(){
+		return Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission("rank.staff")).collect(Collectors.toList());
 	}
 
 }
