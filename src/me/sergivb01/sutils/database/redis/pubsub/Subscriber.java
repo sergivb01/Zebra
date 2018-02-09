@@ -3,6 +3,7 @@ package me.sergivb01.sutils.database.redis.pubsub;
 import lombok.Getter;
 import me.sergivb01.sutils.ServerUtils;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
+import me.sergivb01.sutils.server.Cache;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
 import org.bson.Document;
@@ -57,11 +58,7 @@ public class Subscriber {
 					final String msg = args[3];
 					switch (command) {
 						case "serverstatus":
-							//TODO: Parse this to server system cache
-							System.out.println("==============================================================");
-							System.out.println("Server: " + sender);
-							System.out.println("Status: " + server);
-							System.out.println("==============================================================");
+							Cache.handleData(sender, server);
 							break;
 
 						case "koth":
