@@ -48,6 +48,7 @@ public class Subscriber {
 							.append("online", Bukkit.getOnlinePlayers().size())
 							.append("whitelist", Bukkit.hasWhitelist())
 							.append("maxplayers", Bukkit.getMaxPlayers());
+					System.out.println("Someone requested my data! OH YAYYYYYY");
 					RedisDatabase.getPublisher().write("serverstatus;" + ConfigUtils.SERVER_NAME + ";" + document.toJson() + ";placeholder");
 					return;
 				}
@@ -59,8 +60,8 @@ public class Subscriber {
 					switch (command) {
 						case "serverstatus":
 							Cache.handleData(sender, server);
+							System.out.println("4");
 							break;
-
 						case "koth":
 							new FancyMessage(DARK_GRAY + "[" + BLUE + server + DARK_GRAY + "]")
 									.then("Event ")
