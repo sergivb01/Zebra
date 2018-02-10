@@ -33,7 +33,7 @@ public class RedisDatabase {
 				.append("whitelist", Bukkit.hasWhitelist())
 				.append("maxplayers", Bukkit.getMaxPlayers());
 		System.out.println("Someone requested my data! OH YAYYYYYY");
-		RedisDatabase.getPublisher().write("serverstatus;" + ConfigUtils.SERVER_NAME + ";" + document.toJson() + ";placeholder");
+		RedisDatabase.getPublisher().write("serverstatus;" + ConfigUtils.SERVER_NAME + ";" + document.toJson());
 	}
 
 
