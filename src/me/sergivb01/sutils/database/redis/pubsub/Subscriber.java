@@ -5,7 +5,6 @@ import me.sergivb01.sutils.ServerUtils;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
-import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import redis.clients.jedis.Jedis;
@@ -40,14 +39,7 @@ public class Subscriber {
 			public void onMessage(final String channel, final String message) {
 				final String[] args = message.split(";");
 				if(args[0].equalsIgnoreCase("reqserverstatus") && args[1].equalsIgnoreCase(ConfigUtils.SERVER_NAME)){
-					Document document = new Document("name", ConfigUtils.SERVER_NAME)
-							.append("tps", new Document("tps0", Bukkit.spigot().getTPS()[0])
-									.append("tps1", Bukkit.spigot().getTPS()[1])
-									.append("tps2", Bukkit.spigot().getTPS()[2]))
-							.append("online", Bukkit.getOnlinePlayers().size())
-							.append("whitelist", Bukkit.hasWhitelist())
-							.append("maxplayers", Bukkit.getMaxPlayers());
-					RedisDatabase.getPublisher().write("serverstatus;" + ConfigUtils.SERVER_NAME + ";" + document.toJson() + ";placeholder");
+					RedisDatabase.sendStatus(true);
 					return;
 				}
 				if (args.length > 3) {
@@ -56,14 +48,6 @@ public class Subscriber {
 					final String server = args[2];
 					final String msg = args[3];
 					switch (command) {
-						case "serverstatus":
-							//TODO: Parse this to server system cache
-							System.out.println("==============================================================");
-							System.out.println("Server: " + sender);
-							System.out.println("Status: " + server);
-							System.out.println("==============================================================");
-							break;
-
 						case "koth":
 							new FancyMessage(DARK_GRAY + "[" + BLUE + server + DARK_GRAY + "]")
 									.then("Event ")
