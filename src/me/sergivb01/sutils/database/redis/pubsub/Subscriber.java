@@ -5,6 +5,8 @@ import me.sergivb01.sutils.ServerUtils;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
+import net.minecraft.util.com.google.common.io.ByteArrayDataOutput;
+import net.minecraft.util.com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import redis.clients.jedis.Jedis;
@@ -17,10 +19,12 @@ import static org.bukkit.ChatColor.*;
 
 
 public class Subscriber {
+	private ServerUtils instance;
 	@Getter private JedisPubSub jedisPubSub;
 	private Jedis jedis;
 
 	public Subscriber(ServerUtils instance) {
+		this.instance = instance;
 		this.jedis = new Jedis(ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT, ConfigUtils.REDIS_TIMEOUT);
 		if(ConfigUtils.REDIS_AUTH_ENABLED){
 			this.jedis.auth(ConfigUtils.REDIS_AUTH_PASSWORD);
@@ -48,6 +52,16 @@ public class Subscriber {
 					final String server = args[2];
 					final String msg = args[3];
 					switch (command) {
+						case "reqsend":
+							Player player = Bukkit.getPlayer(sender);
+							if(player != null){
+								final ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
+								dataOutput.writeUTF("Connect");
+								dataOutput.writeUTF(server);
+								player.sendMessage(YELLOW + "Sending you to " + GOLD + server);
+								player.sendPluginMessage(instance, "BungeeCord", dataOutput.toByteArray());
+							}
+							break;
 						case "koth":
 							new FancyMessage(DARK_GRAY + "[" + BLUE + server + DARK_GRAY + "]")
 									.then("Event ")
