@@ -3,10 +3,12 @@ package me.sergivb01.sutils.database.redis.pubsub;
 import lombok.Getter;
 import me.sergivb01.sutils.ServerUtils;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
+import me.sergivb01.sutils.queue.QueueAPI;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
 import net.minecraft.util.com.google.common.io.ByteArrayDataOutput;
 import net.minecraft.util.com.google.common.io.ByteStreams;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import redis.clients.jedis.Jedis;
@@ -42,25 +44,36 @@ public class Subscriber {
 			@Override
 			public void onMessage(final String channel, final String message) {
 				final String[] args = message.split(";");
-				if(args[0].equalsIgnoreCase("reqserverstatus") && args[1].equalsIgnoreCase(ConfigUtils.SERVER_NAME)){
+				final String command = args[0].toLowerCase();
+				if(command.equalsIgnoreCase("reqserverstatus") && args[1].equalsIgnoreCase(ConfigUtils.SERVER_NAME)){
 					RedisDatabase.sendStatus(true);
 					return;
 				}
+				if(command.equalsIgnoreCase("reqsend")){
+					final String sender = args[1];
+					final String server = args[2];
+					Player player = Bukkit.getPlayer(sender);
+
+					if(player != null) {
+						final ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
+						dataOutput.writeUTF("Connect");
+						dataOutput.writeUTF(server);
+						player.sendMessage(YELLOW + "Sending you to " + GOLD + server);
+						player.sendPluginMessage(instance, "BungeeCord", dataOutput.toByteArray());
+					}
+					return;
+				}
+
 				if (args.length > 3) {
-					final String command = args[0].toLowerCase();
 					final String sender = args[1];
 					final String server = args[2];
 					final String msg = args[3];
 					switch (command) {
-						case "reqsend":
-							Player player = Bukkit.getPlayer(sender);
-							if(player != null){
-								final ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
-								dataOutput.writeUTF("Connect");
-								dataOutput.writeUTF(server);
-								player.sendMessage(YELLOW + "Sending you to " + GOLD + server);
-								player.sendPluginMessage(instance, "BungeeCord", dataOutput.toByteArray());
+						case "statusof":
+							if(QueueAPI.statuses.containsKey(sender)) {
+								QueueAPI.statuses.remove(sender);
 							}
+							QueueAPI.statuses.put(sender, Document.parse(server));
 							break;
 						case "koth":
 							new FancyMessage(DARK_GRAY + "[" + BLUE + server + DARK_GRAY + "]")

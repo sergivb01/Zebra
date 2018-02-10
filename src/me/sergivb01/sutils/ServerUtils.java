@@ -1,10 +1,14 @@
 package me.sergivb01.sutils;
 
 import me.sergivb01.sutils.commands.*;
+import me.sergivb01.sutils.commands.queue.JoinQueue;
+import me.sergivb01.sutils.commands.queue.LeaveQueue;
+import me.sergivb01.sutils.commands.queue.StatusQueue;
 import me.sergivb01.sutils.database.agent.AgentManager;
 import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.player.PlayerListener;
+import me.sergivb01.sutils.queue.QueueListener;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
@@ -27,6 +31,7 @@ public class ServerUtils extends JavaPlugin{
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
 		new PlayerListener(this); //Registers as event itself
+		new QueueListener(this);
 
 		new RedisDatabase(this);
 		new MongoDBDatabase();
@@ -41,6 +46,11 @@ public class ServerUtils extends JavaPlugin{
 		//Test command
 		getCommand("test").setExecutor(new TestCommand());
 
+		//Queue
+		getCommand("joinqueue").setExecutor(new JoinQueue());
+		getCommand("leavequeue").setExecutor(new LeaveQueue());
+		getCommand("statusqueue").setExecutor(new StatusQueue());
+
 
 		Map<String, Map<String, Object>> map = getDescription().getCommands();
 		for (Map.Entry<String, Map<String, Object>> entry : map.entrySet()) {
@@ -48,6 +58,7 @@ public class ServerUtils extends JavaPlugin{
 			command.setPermission("sutils.command." + entry.getKey());
 			command.setPermissionMessage(ChatColor.translateAlternateColorCodes('&', "&e&l⚠ &cYou do not have permissions to execute this command."));
 		}
+
 	}
 
 	public void onDisable(){
