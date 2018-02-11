@@ -9,7 +9,7 @@ import org.bson.Document;
 import org.bukkit.Bukkit;
 
 public class RedisDatabase {
-	private ServerUtils instance;
+	@Getter public static ServerUtils instance;
 	@Getter public static Publisher publisher;
 	@Getter public static Subscriber subscriber;
 
