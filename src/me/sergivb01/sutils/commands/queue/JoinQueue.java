@@ -26,8 +26,8 @@ public class JoinQueue implements CommandExecutor{
 
 		Player player = (Player)sender;
 		String playerName = player.getName();
-		QueueAPI.statusOf(playerName);
 
+		QueueAPI.statusOf(playerName);
 
 		String server = args[0];
 
@@ -37,8 +37,7 @@ public class JoinQueue implements CommandExecutor{
 				player.sendMessage(RED + "You are already in a queue!");
 			}
 
-			//TODO: Calc priorities
-			QueueAPI.addPlayer(playerName, server, 1);
+			QueueAPI.addPlayer(playerName, server, getPriority(player));
 			player.sendMessage(BLUE + "You have been added to " + WHITE + server + BLUE + " with a priority of " + WHITE + "1");
 			return true;
 		}
@@ -46,6 +45,18 @@ public class JoinQueue implements CommandExecutor{
 		player.sendMessage(RED + "Please, try again in few seconds.");
 
 		return true;
+	}
+
+	private int getPriority(Player player){
+		if(player.isOp()){
+			return 1;
+		}
+		for(int i = 1; i <= 8; i++){
+			if(player.hasPermission("priority." + i)){
+				return i;
+			}
+		}
+		return 9;
 	}
 
 

@@ -69,6 +69,12 @@ public class Subscriber {
 					final String server = args[2];
 					final String msg = args[3];
 					switch (command) {
+						case "queuestatus":
+							if(QueueAPI.queues.containsKey(sender)) {
+								QueueAPI.queues.remove(sender);
+							}
+							QueueAPI.queues.put(sender, Document.parse(server));
+							break;
 						case "statusof":
 							if(QueueAPI.statuses.containsKey(sender)) {
 								QueueAPI.statuses.remove(sender);

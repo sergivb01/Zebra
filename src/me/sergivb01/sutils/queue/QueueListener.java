@@ -24,9 +24,10 @@ public class QueueListener implements Listener{
                   player -> (QueueAPI.statuses.containsKey(player.getName()) ? QueueAPI.statuses.get(player.getName()).getBoolean("inqueue") : false))
               .forEach(
                   player -> {
-                    Document doc = QueueAPI.statuses.get(player.getName());
-					player.sendMessage(BLUE + "You are currently queud for " + WHITE + doc.getString("server") + BLUE + ": " + (doc.getBoolean("paused") ? RED  + "[PAUSED]" : ""));
-	                player.sendMessage(BLUE + "Position " + WHITE + (doc.getInteger("position") + 1) + BLUE + " of " + WHITE + doc.getInteger("size"));
+                    Document playerDoc = QueueAPI.statuses.get(player.getName());
+                    Document queueDoc = QueueAPI.queues.get(playerDoc.getString("server"));
+					player.sendMessage(BLUE + "You are currently queud for " + WHITE + playerDoc.getString("server") + BLUE + ": " + (queueDoc.getBoolean("paused") ? RED  + "[PAUSED]" : ""));
+	                player.sendMessage(BLUE + "Position " + WHITE + (playerDoc.getInteger("position") + 1) + BLUE + " of " + WHITE + queueDoc.getInteger("size"));
 	                QueueAPI.statusOf(player.getName());
                   });
         },
@@ -41,6 +42,10 @@ public class QueueListener implements Listener{
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event){
 		QueueAPI.removePlayer(event.getPlayer().getName());
+		if(QueueAPI.statuses.containsKey(event.getPlayer().getName())){
+			QueueAPI.statuses.remove(event.getPlayer().getName());
+
+		}
 	}
 
 }

@@ -7,6 +7,7 @@ import org.bson.Document;
 import java.util.HashMap;
 
 public class QueueAPI {
+	public static HashMap<String, Document> queues = new HashMap<>();
 	public static HashMap<String, Document> statuses = new HashMap<>();
 
 	public static void addPlayer(String playerName, String server, int priority){
@@ -15,14 +16,12 @@ public class QueueAPI {
 				.append("server", server)
 				.append("priority", priority);
 		RedisDatabase.getPublisher().write("payload;" + ConfigUtils.SERVER_NAME + ";" + document.toJson());
-		statusOf(playerName);
 	}
 
 	public static void removePlayer(String playerName){
 		Document document = new Document("type", "removeplayer")
 				.append("player", playerName);
 		RedisDatabase.getPublisher().write("payload;" + ConfigUtils.SERVER_NAME + ";" + document.toJson());
-		statusOf(playerName);
 	}
 
 	public static void statusOf(String playerName){

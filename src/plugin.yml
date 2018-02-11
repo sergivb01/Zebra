@@ -12,3 +12,4 @@ commands:
   joinqueue:
   leavequeue:
   statusqueue:
+  queues:
