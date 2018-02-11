@@ -19,36 +19,27 @@ public class LeaveQueue implements CommandExecutor{
 
 		Player player = (Player)sender;
 		String playerName = player.getName();
-		String playerQueue = QueueAPI.getPlayerQueue(playerName);
-
-		if(!QueueAPI.isPlayerInQueue(playerName)) {
-			player.sendMessage(RED + "You are not in a queue!");
-		}
-
-		if (args.length != 0) {
-			if (args[0].equalsIgnoreCase("-f")) {
-				QueueAPI.removePlayer(playerName);
-				player.sendMessage(BLUE + "You have left your previous queue!");
-				return true;
-			} else if (args[0].equalsIgnoreCase("-no")) {
-				player.sendMessage(RED + "You still in queue!");
-			}
+		if(args.length <= 0){
+			new FancyMessage("Are you sure you want to leave ")
+					.color(BLUE)
+					.then(" the queue?")
+					.color(BLUE)
+					.then(" [YES]")
+					.color(GREEN)
+					.command("/leavequeue -f")
+					.then(" [NO]")
+					.color(DARK_RED)
+					.command("/leavequeue -no")
+					.send(player);
 			return true;
 		}
+		if(args[0].equalsIgnoreCase("-f")) {
+			QueueAPI.removePlayer(playerName);
+		}else{
+			player.sendMessage(BLUE + "You will remain in the queue");
+		}
 
-		new FancyMessage("Are you sure you want to leave ")
-				.color(BLUE)
-				.then(playerQueue)
-				.color(WHITE)
-				.then(" queue?")
-				.color(BLUE)
-				.then(" [YES]")
-				.color(GREEN)
-				.command("/leavequeue -f")
-				.then(" [NO]")
-				.color(DARK_RED)
-				.command("/leavequeue -no")
-				.send(player);
+
 		return true;
 	}
 

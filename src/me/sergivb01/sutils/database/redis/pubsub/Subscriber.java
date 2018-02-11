@@ -6,6 +6,7 @@ import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.queue.QueueAPI;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
+import net.md_5.bungee.api.ChatColor;
 import net.minecraft.util.com.google.common.io.ByteArrayDataOutput;
 import net.minecraft.util.com.google.common.io.ByteStreams;
 import org.bson.Document;
@@ -73,6 +74,14 @@ public class Subscriber {
 							Document doc = Document.parse(server);
 							if(doc.getString("type").equalsIgnoreCase("queue")) {
 								QueueAPI.statuses.put(sender, doc);
+							}else if(doc.getString("type").equalsIgnoreCase("message")){
+								System.out.println(sender);
+								Player sendMsg = Bukkit.getPlayer(sender);
+								if(sendMsg != null){
+									if(sendMsg.isOnline()){
+										sendMsg.sendMessage(ChatColor.translateAlternateColorCodes('&', doc.getString("message")));
+									}
+								}
 							}
 							break;
 						case "koth":

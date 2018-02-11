@@ -5,6 +5,7 @@ import me.sergivb01.sutils.utils.ConfigUtils;
 import org.bson.Document;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 public class QueueAPI {
 	public static HashMap<String, Document> statuses = new HashMap<>();
@@ -23,15 +24,12 @@ public class QueueAPI {
 		RedisDatabase.getPublisher().write("payload;" + ConfigUtils.SERVER_NAME + ";" + document.toJson());
 	}
 
-	public static String getPlayerQueue (String str){
-		//TODO: :(
+	public static Document isPlayerInQueue(String playerName){
+		Optional<Document> optional = statuses.values().stream().filter(document -> document.containsKey(playerName)).findFirst();
 
-		return "";
+		return optional.orElse(null);
 	}
 
-	public static boolean isPlayerInQueue(String str){
-		return getPlayerQueue(str) != null;
-	}
 
 
 }

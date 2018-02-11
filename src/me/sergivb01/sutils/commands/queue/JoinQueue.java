@@ -19,11 +19,6 @@ public class JoinQueue implements CommandExecutor{
 		Player player = (Player)sender;
 		String playerName = player.getName();
 
-		if(QueueAPI.isPlayerInQueue(playerName)){
-			player.sendMessage(RED + "You are in a queue!");
-			return true;
-		}
-
 		if(args.length == 0){
 			sender.sendMessage(RED + "/joinqueue <server>");
 			return false;
@@ -33,7 +28,6 @@ public class JoinQueue implements CommandExecutor{
 		String server = args[0];
 
 		QueueAPI.addPlayer(playerName, server, getPriority(player));
-		player.sendMessage(BLUE + "You have been added to " + WHITE + server + BLUE + " with a priority of " + WHITE + "1");
 		return true;
 	}
 

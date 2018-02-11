@@ -19,7 +19,7 @@ public class StatusQueue implements CommandExecutor{
 		Player player = (Player)sender;
 		String playerName = player.getName();
 
-		player.sendMessage(QueueAPI.statuses.get(QueueAPI.getPlayerQueue(playerName)).toJson());
+		player.sendMessage(QueueAPI.isPlayerInQueue(playerName).toJson());
 
 		return true;
 	}
