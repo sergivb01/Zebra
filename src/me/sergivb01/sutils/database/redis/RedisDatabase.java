@@ -24,7 +24,8 @@ public class RedisDatabase {
 	}
 
 	public static void sendStatus(boolean up){
-		Document document = new Document("name", ConfigUtils.SERVER_NAME)
+		Document document = new Document("type", "serverstatus")
+				.append("name", ConfigUtils.SERVER_NAME)
 				.append("up", up)
 				.append("tps", new Document("tps0", Bukkit.spigot().getTPS()[0])
 						.append("tps1", Bukkit.spigot().getTPS()[1])
@@ -32,7 +33,7 @@ public class RedisDatabase {
 				.append("online", Bukkit.getOnlinePlayers().size())
 				.append("whitelist", Bukkit.hasWhitelist())
 				.append("maxplayers", Bukkit.getMaxPlayers());
-		RedisDatabase.getPublisher().write("serverstatus;" + ConfigUtils.SERVER_NAME + ";" + document.toJson());
+		RedisDatabase.getPublisher().write("payload;" + ConfigUtils.SERVER_NAME + ";" + document.toJson());
 	}
 
 

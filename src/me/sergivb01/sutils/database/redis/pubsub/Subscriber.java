@@ -69,17 +69,11 @@ public class Subscriber {
 					final String server = args[2];
 					final String msg = args[3];
 					switch (command) {
-						case "queuestatus":
-							if(QueueAPI.queues.containsKey(sender)) {
-								QueueAPI.queues.remove(sender);
+						case "payload":
+							Document doc = Document.parse(server);
+							if(doc.getString("type").equalsIgnoreCase("queue")) {
+								QueueAPI.statuses.put(sender, doc);
 							}
-							QueueAPI.queues.put(sender, Document.parse(server));
-							break;
-						case "statusof":
-							if(QueueAPI.statuses.containsKey(sender)) {
-								QueueAPI.statuses.remove(sender);
-							}
-							QueueAPI.statuses.put(sender, Document.parse(server));
 							break;
 						case "koth":
 							new FancyMessage(DARK_GRAY + "[" + BLUE + server + DARK_GRAY + "]")
