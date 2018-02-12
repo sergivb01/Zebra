@@ -13,3 +13,4 @@ commands:
   leavequeue:
   statusqueue:
   queues:
+  pausequeue:

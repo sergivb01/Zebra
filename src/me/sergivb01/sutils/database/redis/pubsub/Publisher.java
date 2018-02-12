@@ -12,7 +12,7 @@ public class Publisher {
 	private String channel;
 
 	public Publisher(ServerUtils instance, String channel){
-		if(instance.getConfig().getBoolean("redis.auth.enabled")) {
+		if(ConfigUtils.REDIS_AUTH_ENABLED) {
 			pool = new JedisPool(new JedisPoolConfig(), ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT,  ConfigUtils.REDIS_TIMEOUT,  ConfigUtils.REDIS_AUTH_PASSWORD);
 		}else {
 			pool = new JedisPool(new JedisPoolConfig(), ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT,  ConfigUtils.REDIS_TIMEOUT);

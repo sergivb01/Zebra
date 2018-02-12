@@ -1,10 +1,7 @@
 package me.sergivb01.sutils;
 
 import me.sergivb01.sutils.commands.*;
-import me.sergivb01.sutils.commands.queue.JoinQueue;
-import me.sergivb01.sutils.commands.queue.LeaveQueue;
-import me.sergivb01.sutils.commands.queue.Queues;
-import me.sergivb01.sutils.commands.queue.StatusQueue;
+import me.sergivb01.sutils.commands.queue.*;
 import me.sergivb01.sutils.database.agent.AgentManager;
 import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
@@ -51,6 +48,7 @@ public class ServerUtils extends JavaPlugin{
 		getCommand("queues").setExecutor(new Queues());
 		getCommand("joinqueue").setExecutor(new JoinQueue());
 		getCommand("leavequeue").setExecutor(new LeaveQueue());
+		getCommand("pausequeue").setExecutor(new PauseQueue());
 		getCommand("statusqueue").setExecutor(new StatusQueue());
 
 

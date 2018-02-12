@@ -37,7 +37,7 @@ public class LeaveQueue implements CommandExecutor{
 					.then(" [NO]")
 					.color(DARK_RED)
 					.tooltip(RED + "Click to remain in the queue")
-					.command("/leavequeue -no")
+					.command("/leavequeue -no");
 			players.add(playerName);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(RedisDatabase.getInstance(), ()->{
 				players.remove(playerName);

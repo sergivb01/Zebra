@@ -22,6 +22,7 @@ import static org.bukkit.ChatColor.*;
 
 
 public class Subscriber {
+	@Getter private boolean BACKEND_UP = true;
 	private ServerUtils instance;
 	@Getter private JedisPubSub jedisPubSub;
 	private Jedis jedis;
@@ -72,15 +73,21 @@ public class Subscriber {
 					switch (command) {
 						case "payload":
 							Document doc = Document.parse(server);
-							if(doc.getString("type").equalsIgnoreCase("queue")) {
+							if(sender.equalsIgnoreCase("backend")){
+									BACKEND_UP = doc.getBoolean("up");
+							}else if(doc.getString("type").equalsIgnoreCase("queue")) {
 								QueueAPI.statuses.put(sender, doc);
+								QueueAPI.updatePlayersInqueue(sender);
 							}else if(doc.getString("type").equalsIgnoreCase("message")){
-								System.out.println(sender);
-								Player sendMsg = Bukkit.getPlayer(sender);
-								if(sendMsg != null){
-									if(sendMsg.isOnline()){
-										sendMsg.sendMessage(ChatColor.translateAlternateColorCodes('&', doc.getString("message")));
+								if(!sender.equals("server")) {
+									Player sendMsg = Bukkit.getPlayer(sender);
+									if (sendMsg != null) {
+										if (sendMsg.isOnline()) {
+											sendMsg.sendMessage(ChatColor.translateAlternateColorCodes('&', doc.getString("message")));
+										}
 									}
+								}else{
+									Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', doc.getString("message")));
 								}
 							}
 							break;
