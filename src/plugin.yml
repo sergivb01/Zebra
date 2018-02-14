@@ -9,8 +9,3 @@ commands:
   test:
   request:
     aliases: [helpop]
-  joinqueue:
-  leavequeue:
-  statusqueue:
-  queues:
-  pausequeue:

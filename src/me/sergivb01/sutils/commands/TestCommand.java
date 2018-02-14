@@ -1,6 +1,5 @@
 package me.sergivb01.sutils.commands;
 
-import me.sergivb01.sutils.queue.QueueAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,7 +7,7 @@ import org.bukkit.command.CommandSender;
 public class TestCommand implements CommandExecutor{
 
 	public boolean onCommand (CommandSender sender, Command command, String s, String[] args) {
-		QueueAPI.updatePlayersInqueue(args[0]);
+		sender.sendMessage("there is no test. :o");
 
 		return true;
 	}

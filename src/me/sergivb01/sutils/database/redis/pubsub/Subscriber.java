@@ -3,13 +3,8 @@ package me.sergivb01.sutils.database.redis.pubsub;
 import lombok.Getter;
 import me.sergivb01.sutils.ServerUtils;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
-import me.sergivb01.sutils.queue.QueueAPI;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
-import net.md_5.bungee.api.ChatColor;
-import net.minecraft.util.com.google.common.io.ByteArrayDataOutput;
-import net.minecraft.util.com.google.common.io.ByteStreams;
-import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import redis.clients.jedis.Jedis;
@@ -47,49 +42,14 @@ public class Subscriber {
 			public void onMessage(final String channel, final String message) {
 				final String[] args = message.split(";");
 				final String command = args[0].toLowerCase();
-				if(command.equalsIgnoreCase("reqserverstatus") && args[1].equalsIgnoreCase(ConfigUtils.SERVER_NAME)){
-					RedisDatabase.sendStatus(true);
-					return;
-				}
-				if(command.equalsIgnoreCase("reqsend")){
-					final String sender = args[1];
-					final String server = args[2];
-					Player player = Bukkit.getPlayer(sender);
-
-					if(player != null) {
-						final ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
-						dataOutput.writeUTF("Connect");
-						dataOutput.writeUTF(server);
-						player.sendMessage(YELLOW + "Sending you to " + GOLD + server);
-						player.sendPluginMessage(instance, "BungeeCord", dataOutput.toByteArray());
-					}
-					return;
-				}
 
 				if (args.length > 3) {
 					final String sender = args[1];
 					final String server = args[2];
 					final String msg = args[3];
 					switch (command) {
-						case "payload":
-							Document doc = Document.parse(server);
-							if(sender.equalsIgnoreCase("backend")){
-									BACKEND_UP = doc.getBoolean("up");
-							}else if(doc.getString("type").equalsIgnoreCase("queue")) {
-								QueueAPI.statuses.put(sender, doc);
-								QueueAPI.updatePlayersInqueue(sender);
-							}else if(doc.getString("type").equalsIgnoreCase("message")){
-								if(!sender.equals("server")) {
-									Player sendMsg = Bukkit.getPlayer(sender);
-									if (sendMsg != null) {
-										if (sendMsg.isOnline()) {
-											sendMsg.sendMessage(ChatColor.translateAlternateColorCodes('&', doc.getString("message")));
-										}
-									}
-								}else{
-									Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', doc.getString("message")));
-								}
-							}
+						case "reqserverstatus":
+							if(sender.equalsIgnoreCase(ConfigUtils.SERVER_NAME)) RedisDatabase.sendStatus(true);
 							break;
 						case "koth":
 							new FancyMessage(DARK_GRAY + "[" + BLUE + server + DARK_GRAY + "]")
