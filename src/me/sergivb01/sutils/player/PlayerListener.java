@@ -6,6 +6,7 @@ import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
 import net.veilmc.base.BasePlugin;
+import net.veilmc.hcf.utils.ConfigurationService;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -42,9 +43,9 @@ public class PlayerListener implements Listener{
 
 		new FancyMessage("Your profile is available at ")
 				.color(YELLOW)
-				.then("https://example.com/u/" + player.getName())
+				.then("https://veilhcf.us/u/" + player.getName())
 				.color(GREEN)
-				.link("https://example.com/u/" + player.getName())
+				.link("https://veilhcf.us/u/" + player.getName())
 				.tooltip("Click to open your profile")
 				.send(player);
 
@@ -52,14 +53,18 @@ public class PlayerListener implements Listener{
 			MongoDBDatabase.saveProfileToDatabase(player, true);
 			player.sendMessage(YELLOW + "Your profile has been saved.");
 		}, 20L);
-		RedisDatabase.getPublisher().write("staffswitch;" + player.getName()+ ";" + ConfigUtils.SERVER_NAME + ";joined");
+		if(player.hasPermission("rank.staff")){
+			RedisDatabase.getPublisher().write("staffswitch;" + player.getName() + ";" + ConfigUtils.SERVER_NAME + ";joined");
+		}
 	}
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event){
 		Player player = event.getPlayer();
 		MongoDBDatabase.saveProfileToDatabase(player, false);
-		RedisDatabase.getPublisher().write("staffswitch;" + player.getName()+ ";" + ConfigUtils.SERVER_NAME + ";quit");
+		if(player.hasPermission("rank.staff")){
+			RedisDatabase.getPublisher().write("staffswitch;" + player.getName() + ";" + ConfigUtils.SERVER_NAME + ";quit");
+		}
 	}
 
 	@EventHandler
@@ -76,6 +81,9 @@ public class PlayerListener implements Listener{
 
 	@EventHandler(ignoreCancelled=true, priority= EventPriority.HIGH)
 	public void onPlayerDeath(PlayerDeathEvent event){
+		if(ConfigurationService.KIT_MAP){
+			return;
+		}
 		UUID playerUUID = event.getEntity().getUniqueId();
 		UUID killerUUID = (event.getEntity().getKiller() != null) ? event.getEntity().getKiller().getUniqueId() : null;
 		String deathMSG = event.getDeathMessage();

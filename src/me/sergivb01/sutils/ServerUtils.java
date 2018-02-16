@@ -1,12 +1,10 @@
 package me.sergivb01.sutils;
 
 import me.sergivb01.sutils.commands.*;
-import me.sergivb01.sutils.commands.queue.*;
 import me.sergivb01.sutils.database.agent.AgentManager;
 import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.player.PlayerListener;
-import me.sergivb01.sutils.queue.QueueListener;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
@@ -29,7 +27,6 @@ public class ServerUtils extends JavaPlugin{
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
 		new PlayerListener(this); //Registers as event itself
-		new QueueListener(this);
 
 		new RedisDatabase(this);
 		new MongoDBDatabase();
@@ -43,13 +40,6 @@ public class ServerUtils extends JavaPlugin{
 
 		//Test command
 		getCommand("test").setExecutor(new TestCommand());
-
-		//Queue
-		getCommand("queues").setExecutor(new Queues());
-		getCommand("joinqueue").setExecutor(new JoinQueue());
-		getCommand("leavequeue").setExecutor(new LeaveQueue());
-		getCommand("pausequeue").setExecutor(new PauseQueue());
-		getCommand("statusqueue").setExecutor(new StatusQueue());
 
 
 		Map<String, Map<String, Object>> map = getDescription().getCommands();
@@ -72,5 +62,6 @@ public class ServerUtils extends JavaPlugin{
 	public static void broadcastKoth(String kothName){
 		RedisDatabase.getPublisher().write("koth;" + kothName + ";" + ConfigUtils.SERVER_NAME + ";placeholder");
 	}
+
 
 }
