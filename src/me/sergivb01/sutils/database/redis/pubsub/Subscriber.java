@@ -75,6 +75,8 @@ public class Subscriber {
 									.command("/staffserver " + server)
 									.tooltip(GRAY + "Click to teleport to " + server)
 									.then(sender + ": ")
+									.command("/tp " + sender)
+									.tooltip(GRAY + "Click to teleport to " + sender)
 									.color(AQUA)
 									.then(msg).send(getStaff());
 							break;
@@ -86,6 +88,8 @@ public class Subscriber {
 									.command("/staffserver " + server)
 									.tooltip(GRAY + "Click to teleport to " + server)
 									.then(sender)
+									.command("/tp " + sender)
+									.tooltip(GRAY + "Click to teleport to " + sender)
 									.color(AQUA)
 									.then(" has requested assistance.")
 									.color(GRAY)
@@ -104,6 +108,8 @@ public class Subscriber {
 									.command("/staffserver " + server)
 									.tooltip(GRAY + "Click to teleport to " + server)
 									.then(reportedPlayer)
+									.command("/tp " + reportedPlayer)
+									.tooltip(GRAY + "Click to teleport to " + reportedPlayer)
 									.color(AQUA)
 									.then(" has been reported.")
 									.tooltip(GRAY + "Report submitted by " + AQUA + sender)
