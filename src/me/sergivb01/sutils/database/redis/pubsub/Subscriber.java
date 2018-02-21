@@ -4,7 +4,9 @@ import lombok.Getter;
 import me.sergivb01.sutils.ServerUtils;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.utils.ConfigUtils;
+import me.sergivb01.sutils.payload.PayloadParser;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import redis.clients.jedis.Jedis;
@@ -47,6 +49,9 @@ public class Subscriber {
 					final String server = args[2];
 					final String msg = args[3];
 					switch (command) {
+						case "payload":
+							PayloadParser.parse(Document.parse(sender));
+							break;
 						case "reqserverstatus":
 							if(sender.equalsIgnoreCase(ConfigUtils.SERVER_NAME)) RedisDatabase.sendStatus(true);
 							break;
