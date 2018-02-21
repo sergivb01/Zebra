@@ -22,7 +22,9 @@ public class PayloadSender{
 	}
 
 	private static void sendPayload(Document document){
-		RedisDatabase.getPublisher().write("payload;" + document.append("timestamp", System.currentTimeMillis()).toJson());
+		RedisDatabase.getPublisher().write("payload;" +
+				document.append("timestamp", System.currentTimeMillis()).toJson()
+		);
 	}
 
 
