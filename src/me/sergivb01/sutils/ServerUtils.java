@@ -53,7 +53,6 @@ public class ServerUtils extends JavaPlugin{
 
 	public void onDisable(){
 		RedisDatabase.sendStatus(false);
-		System.out.println("Sent status!");
 
 		RedisDatabase.getSubscriber().getJedisPubSub().unsubscribe();
 		RedisDatabase.getPublisher().getPool().destroy();
