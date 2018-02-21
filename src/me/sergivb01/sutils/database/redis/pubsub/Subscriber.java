@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 import static org.bukkit.ChatColor.*;
 
-
 public class Subscriber {
 	@Getter private boolean BACKEND_UP = true;
 	private ServerUtils instance;

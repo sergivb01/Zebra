@@ -14,12 +14,12 @@ public class RedisDatabase {
 	@Getter public static Subscriber subscriber;
 
 	public RedisDatabase(ServerUtils instance){
-		this.instance = instance;
+		RedisDatabase.instance = instance;
 		init();
 	}
 
 	private void init() {
-		publisher = new Publisher(instance, ConfigUtils.REDIS_CHANNEL);
+		publisher = new Publisher();
 		subscriber = new Subscriber(instance);
 	}
 

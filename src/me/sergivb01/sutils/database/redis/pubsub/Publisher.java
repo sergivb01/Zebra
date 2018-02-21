@@ -1,7 +1,6 @@
 package me.sergivb01.sutils.database.redis.pubsub;
 
 import lombok.Getter;
-import me.sergivb01.sutils.ServerUtils;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -11,13 +10,13 @@ public class Publisher {
 	@Getter private JedisPool pool;
 	private String channel;
 
-	public Publisher(ServerUtils instance, String channel){
+	public Publisher(){
 		if(ConfigUtils.REDIS_AUTH_ENABLED) {
 			pool = new JedisPool(new JedisPoolConfig(), ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT,  ConfigUtils.REDIS_TIMEOUT,  ConfigUtils.REDIS_AUTH_PASSWORD);
 		}else {
 			pool = new JedisPool(new JedisPoolConfig(), ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT,  ConfigUtils.REDIS_TIMEOUT);
 		}
-		this.channel = channel;
+		this.channel = ConfigUtils.REDIS_CHANNEL;
 	}
 
 	public void write(final String message) {
