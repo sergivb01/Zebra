@@ -28,7 +28,7 @@ public class AgentManager {
 			agent.gauge(prefix + ConfigUtils.SERVER_NAME + ".online", Bukkit.getOnlinePlayers().size());
 			agent.gauge(prefix + ConfigUtils.SERVER_NAME + ".freememory", runtime.freeMemory() / 1024);
 			agent.gauge(prefix + ConfigUtils.SERVER_NAME + ".maxmemory", runtime.maxMemory() / 1024);
-		}, 20L, 5 * 20L);
+		}, 20L, 15 * 20L);
 	}
 
 
