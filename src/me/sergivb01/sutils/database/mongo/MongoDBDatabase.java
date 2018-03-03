@@ -16,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +89,7 @@ public class MongoDBDatabase {
 		Document profile = new Document("spawn-tokens", HCF.getInstance().getUserManager().getUser(player.getUniqueId()).getSpawnTokens())
 				.append("kills", player.getStatistic(Statistic.PLAYER_KILLS))
 				.append("deaths", player.getStatistic(Statistic.DEATHS))
+				.append("rank", PermissionsEx.getUser(player).getGroups()[0].getName())
 				.append("notes", BasePlugin.getPlugin().getUserManager().getUser(player.getUniqueId()).getNotes())
 				.append("deathban",
 						//Save deathban
