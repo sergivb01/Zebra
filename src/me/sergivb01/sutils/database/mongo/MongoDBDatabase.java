@@ -58,6 +58,7 @@ public class MongoDBDatabase {
 		playerFaction.getAlliedFactions().forEach(playerFaction1 -> allies.add(playerFaction.getName()));
 
 		Document doc = new Document("uuid", playerFaction.getUniqueID()) //Unique identifier by faction, as player UUID
+				.append("server", ConfigUtils.SERVER_NAME)
 				.append("name", playerFaction.getName())
 				.append("players", playerFaction.getMembers().keySet())
 				.append("leader", playerFaction.getLeader().getUniqueId())

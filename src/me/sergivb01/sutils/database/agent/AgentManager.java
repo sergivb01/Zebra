@@ -19,11 +19,11 @@ public class AgentManager {
 
 	private void init(){
 		agent = new Agent(new AgentOptions().setApiKey(ConfigUtils.AGENT_API_KEY).setEnabled(true));
-		Runtime runtime = Runtime.getRuntime();
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, ()->{
 			if(!agent.isRunning()){ //Avoid possible crashes
 				return;
 			}
+			Runtime runtime = Runtime.getRuntime();
 			agent.gauge(prefix + ConfigUtils.SERVER_NAME + ".tps", Bukkit.spigot().getTPS()[0]);
 			agent.gauge(prefix + ConfigUtils.SERVER_NAME + ".online", Bukkit.getOnlinePlayers().size());
 			agent.gauge(prefix + ConfigUtils.SERVER_NAME + ".freememory", runtime.freeMemory() / 1024);
