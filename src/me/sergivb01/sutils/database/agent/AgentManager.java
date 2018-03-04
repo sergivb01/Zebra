@@ -18,7 +18,7 @@ public class AgentManager {
 	}
 
 	private void init(){
-		agent = new Agent(new AgentOptions().setApiKey(ConfigUtils.AGENT_API_KEY).setEnabled(true));
+		agent = new Agent(new AgentOptions().setApiKey(ConfigUtils.AGENT_API_KEY).setEnabled(true).setSynchronous(true));
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, ()->{
 			if(!agent.isRunning()){ //Avoid possible crashes
 				return;
@@ -28,7 +28,7 @@ public class AgentManager {
 			agent.gauge(prefix + ConfigUtils.SERVER_NAME + ".online", Bukkit.getOnlinePlayers().size());
 			agent.gauge(prefix + ConfigUtils.SERVER_NAME + ".freememory", runtime.freeMemory() / 1024);
 			agent.gauge(prefix + ConfigUtils.SERVER_NAME + ".maxmemory", runtime.maxMemory() / 1024);
-		}, 20L, 15 * 20L);
+		}, 20L, 10 * 20L);
 	}
 
 
