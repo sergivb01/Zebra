@@ -63,6 +63,7 @@ public class MongoDBDatabase {
 				.append("server", ConfigUtils.SERVER_NAME)
 				.append("name", playerFaction.getName())
 				.append("players", playerFaction.getMembers().keySet())
+				.append("players_str", playerFaction.getMembers().keySet().stream().map(UUID::toString).toArray())
 				.append("leader", playerFaction.getLeader().getUniqueId())
 				.append("allies", allies)
 				.append("balance", playerFaction.getBalance())
