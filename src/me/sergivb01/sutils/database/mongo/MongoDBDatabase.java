@@ -58,12 +58,14 @@ public class MongoDBDatabase {
 	private static void saveFactionToDatabase (PlayerFaction playerFaction){
 		List<String> allies = new ArrayList<>();
 		playerFaction.getAlliedFactions().forEach(playerFaction1 -> allies.add(playerFaction.getName()));
+		List<String> members = new ArrayList<>();
+		playerFaction.getMembers().forEach((x, y) -> members.add(x.toString()));
 
 		Document doc = new Document("uuid", playerFaction.getUniqueID()) //Unique identifier by faction, as player UUID
 				.append("server", ConfigUtils.SERVER_NAME)
 				.append("name", playerFaction.getName())
 				.append("players", playerFaction.getMembers().keySet())
-				.append("players_str", playerFaction.getMembers().keySet().stream().map(UUID::toString).toArray())
+				.append("players_str", members)
 				.append("leader", playerFaction.getLeader().getUniqueId())
 				.append("allies", allies)
 				.append("balance", playerFaction.getBalance())
