@@ -20,6 +20,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MongoDBDatabase {
 	private static MongoCollection<Document> playercollection;
@@ -78,19 +79,19 @@ public class MongoDBDatabase {
 	}
 
 	public static void saveProfileToDatabase(Player player, boolean online){
-		PlayerFaction faction = HCF.getPlugin().getFactionManager().getPlayerFaction(player.getUniqueId());
+		UUID uuid = player.getUniqueId();
+		PlayerFaction faction = HCF.getPlugin().getFactionManager().getPlayerFaction(uuid);
 		if(faction != null){
 			saveFactionToDatabase(faction);
 		}
 
-		Deathban deathban = HCF.getPlugin().getUserManager().getUser(player.getUniqueId()).getDeathban();
+		Deathban deathban = HCF.getPlugin().getUserManager().getUser(uuid).getDeathban();
 
-		//This includes ores, kills/deaths and more to add!
-		Document profile = new Document("spawn_tokens", HCF.getInstance().getUserManager().getUser(player.getUniqueId()).getSpawnTokens())
+		Document profile = new Document("spawn_tokens", HCF.getInstance().getUserManager().getUser(uuid).getSpawnTokens())
 				.append("kills", player.getStatistic(Statistic.PLAYER_KILLS))
 				.append("deaths", player.getStatistic(Statistic.DEATHS))
-				.append("rank", PermissionsEx.getUser(player).getGroups()[0].getName())
-				.append("notes", BasePlugin.getPlugin().getUserManager().getUser(player.getUniqueId()).getNotes())
+				.append("playtime", BasePlugin.getPlugin().getPlayTimeManager().getTotalPlayTime(uuid))
+				.append("notes", BasePlugin.getPlugin().getUserManager().getUser(uuid).getNotes())
 				.append("deathban",
 						//Save deathban
 						new Document("reason", (deathban != null) ? deathban.getReason() : "none")
@@ -100,7 +101,7 @@ public class MongoDBDatabase {
 				.append("faction",
 						//Save faction
 						new Document("name", (faction != null) ? faction.getName() : "none")
-								.append("role", (faction != null) ? faction.getMember(player.getUniqueId()).getRole().toString() : "none")
+								.append("role", (faction != null) ? faction.getMember(uuid).getRole().toString() : "none")
 								.append("id", (faction != null) ? faction.getUniqueID() : "none"))
 				.append("ores",
 						//Save player ores
@@ -115,8 +116,9 @@ public class MongoDBDatabase {
 
 
 		//Includes all player profile (faction, )
-		Document doc = new Document("uuid", player.getUniqueId())
-		.append("uuid_str", player.getUniqueId().toString())
+		Document doc = new Document("uuid", uuid)
+		.append("uuid_str", uuid.toString())
+		.append("rank", PermissionsEx.getUser(player).getGroups()[0].getName())
 		.append("nickname", player.getName())
 		.append("address", player.getAddress().getHostString())
 		.append("lastconn", System.currentTimeMillis())
@@ -125,7 +127,7 @@ public class MongoDBDatabase {
 		.append("online", online)
 		.append(ConfigUtils.SERVER_NAME, new Document("profile", profile));
 
-		Document found = playercollection.find(new Document("uuid", player.getUniqueId())).first();
+		Document found = playercollection.find(new Document("uuid", uuid)).first();
 		if(found != null){
 			Bson updateOperation = new Document("$set", doc);
 			playercollection.updateOne(found, updateOperation);
