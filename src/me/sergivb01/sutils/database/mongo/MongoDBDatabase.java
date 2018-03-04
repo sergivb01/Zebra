@@ -86,7 +86,7 @@ public class MongoDBDatabase {
 		Deathban deathban = HCF.getPlugin().getUserManager().getUser(player.getUniqueId()).getDeathban();
 
 		//This includes ores, kills/deaths and more to add!
-		Document profile = new Document("spawn-tokens", HCF.getInstance().getUserManager().getUser(player.getUniqueId()).getSpawnTokens())
+		Document profile = new Document("spawn_tokens", HCF.getInstance().getUserManager().getUser(player.getUniqueId()).getSpawnTokens())
 				.append("kills", player.getStatistic(Statistic.PLAYER_KILLS))
 				.append("deaths", player.getStatistic(Statistic.DEATHS))
 				.append("rank", PermissionsEx.getUser(player).getGroups()[0].getName())
@@ -116,6 +116,7 @@ public class MongoDBDatabase {
 
 		//Includes all player profile (faction, )
 		Document doc = new Document("uuid", player.getUniqueId())
+		.append("uuid_str", player.getUniqueId().toString())
 		.append("nickname", player.getName())
 		.append("address", player.getAddress().getHostString())
 		.append("lastconn", System.currentTimeMillis())
