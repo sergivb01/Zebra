@@ -92,6 +92,7 @@ public class MongoDBDatabase {
 				.append("deaths", player.getStatistic(Statistic.DEATHS))
 				.append("playtime", BasePlugin.getPlugin().getPlayTimeManager().getTotalPlayTime(uuid))
 				.append("notes", BasePlugin.getPlugin().getUserManager().getUser(uuid).getNotes())
+				.append("lives", HCF.getPlugin().getDeathbanManager().getLives(uuid))
 				.append("deathban",
 						//Save deathban
 						new Document("reason", (deathban != null) ? deathban.getReason() : "none")

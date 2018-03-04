@@ -90,10 +90,10 @@ public class PlayerListener implements Listener{
 
 		Location location = event.getEntity().getLocation();
 
-		UUID deathID = UUID.randomUUID();
-		Document document = new Document("death-id", deathID)
-				.append("dead", playerUUID)
+		Document document = new Document("dead", playerUUID)
+				.append("dead_str", playerUUID.toString())
 				.append("killer", (killerUUID != null) ? killerUUID : "ENVIRONMENT")
+				.append("killer_str", (killerUUID != null) ? killerUUID.toString() : "ENVIRONMENT")
 				.append("deathmsg", deathMSG)
 				.append("location", location.getBlockX() + ";" + location.getBlockY() + ";" + location.getBlockZ())
 				.append("content-death", getInventoryAsJSON(event.getEntity()))
