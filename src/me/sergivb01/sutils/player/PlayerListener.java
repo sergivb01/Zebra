@@ -5,7 +5,6 @@ import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
-import net.minecraft.util.org.apache.commons.codec.binary.Base64;
 import net.veilmc.base.BasePlugin;
 import net.veilmc.hcf.utils.ConfigurationService;
 import org.bson.Document;
@@ -97,8 +96,8 @@ public class PlayerListener implements Listener{
 				.append("killer_str", (killerUUID != null) ? killerUUID.toString() : "ENVIRONMENT")
 				.append("deathmsg", deathMSG)
 				.append("location", location.getBlockX() + ";" + location.getBlockY() + ";" + location.getBlockZ())
-				.append("content-death", new String(Base64.encodeBase64(getInventoryAsJSON(event.getEntity()).getBytes())))
-				.append("content-killer", (killerUUID != null) ? new String(Base64.encodeBase64(getInventoryAsJSON(event.getEntity().getKiller()).getBytes())) : "none")
+				.append("content-death", getInventoryAsJSON(event.getEntity()))
+				.append("content-killer", (killerUUID != null) ? getInventoryAsJSON(event.getEntity().getKiller()).getBytes() : "none")
 				.append("server", ConfigUtils.SERVER_NAME)
 				.append("timestamp", System.currentTimeMillis());
 
