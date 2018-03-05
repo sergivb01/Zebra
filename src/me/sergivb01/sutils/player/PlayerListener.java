@@ -52,10 +52,11 @@ public class PlayerListener implements Listener{
 		doAsyncLater(()->{
 			MongoDBDatabase.saveProfileToDatabase(player, true);
 			player.sendMessage(YELLOW + "Your profile has been saved.");
+
+			if(player.hasPermission("rank.staff"))
+				RedisDatabase.getPublisher().write("staffswitch;" + player.getName() + ";" + ConfigUtils.SERVER_NAME + ";joined");
 		}, 20L);
-		if(player.hasPermission("rank.staff")){
-			RedisDatabase.getPublisher().write("staffswitch;" + player.getName() + ";" + ConfigUtils.SERVER_NAME + ";joined");
-		}
+
 	}
 
 	@EventHandler
