@@ -7,7 +7,7 @@ import me.sergivb01.sutils.ServerUtils;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import org.bukkit.Bukkit;
 
-public class AgentManager {
+public class AgentManager{
 	private ServerUtils instance;
 	@Getter public static Agent agent;
 	private static String prefix = "mcserver.";
@@ -19,7 +19,7 @@ public class AgentManager {
 
 	private void init(){
 		agent = new Agent(new AgentOptions().setApiKey(ConfigUtils.AGENT_API_KEY).setEnabled(true).setSynchronous(true));
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, ()->{
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, () -> {
 			if(!agent.isRunning()){ //Avoid possible crashes
 				return;
 			}

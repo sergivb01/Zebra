@@ -2,6 +2,7 @@ package me.sergivb01.sutils.database.mongo;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import me.sergivb01.sutils.enums.PlayerVersion;
@@ -22,21 +23,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class MongoDBDatabase {
+public class MongoDBDatabase{
 	private static MongoCollection<Document> playercollection;
 	private static MongoCollection<Document> factionCollection;
 	private static MongoCollection<Document> deathCollection;
 
-	public MongoDBDatabase (){
+	public MongoDBDatabase(){
 		init();
 	}
 
-	private void init() {
+	private void init(){
 		MongoClientURI uri;
 		if(ConfigUtils.MONGO_AUTH_ENABLED){
-			uri = new MongoClientURI("mongodb://" + ConfigUtils.MONGO_USERNAME + ":" + ConfigUtils.MONGO_AUTH_PASSWORD +"@" + ConfigUtils.MONGO_HOST + ":" +  ConfigUtils.MONGO_PORT +"/?authSource=" + ConfigUtils.MONGO_DATABASE);
+			uri = new MongoClientURI("mongodb://" + ConfigUtils.MONGO_USERNAME + ":" + ConfigUtils.MONGO_AUTH_PASSWORD + "@" + ConfigUtils.MONGO_HOST + ":" + ConfigUtils.MONGO_PORT + "/?authSource=" + ConfigUtils.MONGO_DATABASE);
 		}else{
-			uri = new MongoClientURI("mongodb://" + ConfigUtils.MONGO_HOST + ":" +  ConfigUtils.MONGO_PORT + "/?authSource=" + ConfigUtils.MONGO_DATABASE);
+			uri = new MongoClientURI("mongodb://" + ConfigUtils.MONGO_HOST + ":" + ConfigUtils.MONGO_PORT + "/?authSource=" + ConfigUtils.MONGO_DATABASE);
 		}
 
 		MongoClient mongoClient = new MongoClient(uri);
@@ -55,7 +56,7 @@ public class MongoDBDatabase {
 		}
 	}
 
-	private static void saveFactionToDatabase (PlayerFaction playerFaction){
+	private static void saveFactionToDatabase(PlayerFaction playerFaction){
 		List<String> allies = new ArrayList<>();
 		playerFaction.getAlliedFactions().forEach(playerFaction1 -> allies.add(playerFaction.getName()));
 		List<String> members = new ArrayList<>();
@@ -99,9 +100,9 @@ public class MongoDBDatabase {
 				.append("deathban",
 						//Save deathban
 						new Document("reason", (deathban != null) ? deathban.getReason() : "none")
-						.append("created", (deathban != null) ? deathban.getCreationMillis() : "none")
-						.append("expires", (deathban != null) ? deathban.getExpiryMillis() : "none")
-						.append("location", (deathban != null) ? deathban.getDeathPoint().getBlockX() + ";" + deathban.getDeathPoint().getBlockY() + ";" + deathban.getDeathPoint().getBlockZ() : "none"))
+								.append("created", (deathban != null) ? deathban.getCreationMillis() : "none")
+								.append("expires", (deathban != null) ? deathban.getExpiryMillis() : "none")
+								.append("location", (deathban != null) ? deathban.getDeathPoint().getBlockX() + ";" + deathban.getDeathPoint().getBlockY() + ";" + deathban.getDeathPoint().getBlockZ() : "none"))
 				.append("faction",
 						//Save faction
 						new Document("name", (faction != null) ? faction.getName() : "none")
@@ -121,15 +122,15 @@ public class MongoDBDatabase {
 
 		//Includes all player profile (faction, )
 		Document doc = new Document("uuid", uuid)
-		.append("uuid_str", uuid.toString())
-		.append("rank", PermissionsEx.getUser(player).getGroups()[0].getName())
-		.append("nickname", player.getName())
-		.append("address", player.getAddress().getHostString())
-		.append("lastconn", System.currentTimeMillis())
-		.append("server", ConfigUtils.SERVER_NAME)
-		.append("version", getVersionForPlayer(player).toString())
-		.append("online", online)
-		.append(ConfigUtils.SERVER_NAME, new Document("profile", profile));
+				.append("uuid_str", uuid.toString())
+				.append("rank", PermissionsEx.getUser(player).getGroups()[0].getName())
+				.append("nickname", player.getName())
+				.append("address", player.getAddress().getHostString())
+				.append("lastconn", System.currentTimeMillis())
+				.append("server", ConfigUtils.SERVER_NAME)
+				.append("version", getVersionForPlayer(player).toString())
+				.append("online", online)
+				.append(ConfigUtils.SERVER_NAME, new Document("profile", profile));
 
 		Document found = playercollection.find(new Document("uuid", uuid)).first();
 		if(found != null){
@@ -140,12 +141,19 @@ public class MongoDBDatabase {
 		}
 	}
 
+	public static FindIterable<Document> getRecentDeaths(UUID uuid){
+		return deathCollection.find(
+				new Document("server", ConfigUtils.SERVER_NAME)
+						.append("dead", uuid)
+		).sort(new Document("timestamp", -1)).limit(20);
+	}
 
-	private static PlayerVersion getVersionForPlayer (Player player){
+
+	private static PlayerVersion getVersionForPlayer(Player player){
 		int version = ((CraftPlayer) player).getHandle().playerConnection.networkManager.getVersion();
 		if(version >= 47){
-			return  PlayerVersion.Version_1_8;
-		}else if (version == 5 || version == 4){
+			return PlayerVersion.Version_1_8;
+		}else if(version == 5 || version == 4){
 			return PlayerVersion.Version_1_7;
 		}
 		return PlayerVersion.UNKOWN;

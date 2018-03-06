@@ -6,6 +6,7 @@ commands:
   sc:
   report:
   staffserver:
+  dhist:
   test:
   request:
     aliases: [helpop]

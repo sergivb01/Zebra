@@ -16,23 +16,23 @@ import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
 public class StaffChatCommand implements CommandExecutor{
-	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args) {
+	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args){
 		ServerParticipator target;
 		ServerParticipator participator = BasePlugin.getPlugin().getUserManager().getParticipator(sender);
-		if (participator == null) {
+		if(participator == null){
 			sender.sendMessage(RED + "You are not allowed to do this.");
 			return true;
 		}
-		
-		if (args.length <= 0) {
-			if (!(sender instanceof Player)) {
+
+		if(args.length <= 0){
+			if(!(sender instanceof Player)){
 				sender.sendMessage(RED + "Usage: /sc <player|message...>");
 				return true;
 			}
 			target = participator;
-		} else {
+		}else{
 			Player targetPlayer = Bukkit.getPlayerExact(args[0]);
-			if (targetPlayer == null || !BaseCommand.canSee(sender, targetPlayer) || !sender.hasPermission("command.staffchat.others")) {
+			if(!BaseCommand.canSee(sender, targetPlayer) || !sender.hasPermission("command.staffchat.others")){
 				RedisDatabase.getPublisher().write("staffchat;" + sender.getName() + ";" + ConfigUtils.SERVER_NAME + ";" + StringUtils.join(args, " ").replace(";", ":"));
 				return true;
 			}

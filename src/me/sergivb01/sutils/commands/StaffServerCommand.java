@@ -17,7 +17,7 @@ public class StaffServerCommand implements CommandExecutor{
 		this.instance = instance;
 	}
 
-	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args) {
+	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args){
 		if(!(sender instanceof Player)){
 			sender.sendMessage(RED + "Only players nigger.");
 			return false;

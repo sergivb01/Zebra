@@ -1,4 +1,5 @@
 package me.sergivb01.sutils.commands;
+
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import net.minecraft.util.org.apache.commons.lang3.StringUtils;
@@ -19,32 +20,32 @@ import static org.bukkit.ChatColor.RED;
 public class ReportCommand implements CommandExecutor{
 	private static final Map<UUID, Long> COOLDOWNS;
 
-	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args) {
+	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args){
 		if(!(sender instanceof Player)){
 			sender.sendMessage(ChatColor.RED + "Only players nigger.");
 			return false;
 		}
 		Player player = (Player) sender;
 
-		if (args.length < 2) {
+		if(args.length < 2){
 			sender.sendMessage(RED + "Usage: '/report <player> <reason...>'");
 			return false;
 		}
 
 
 		final Player reported = Bukkit.getPlayer(args[0]);
-		if (reported == null) {
+		if(reported == null){
 			player.sendMessage(RED + "No player named '" + args[0] + "' found online.");
 			return false;
 		}
 
-		if (reported.equals(player)) {
+		if(reported.equals(player)){
 			player.sendMessage(RED + "You can't report yourself!");
 			return false;
 		}
 
-		if (ReportCommand.COOLDOWNS.containsKey(player.getUniqueId())) {
-			if (System.currentTimeMillis() - ReportCommand.COOLDOWNS.get(player.getUniqueId()) < 100000L) {
+		if(ReportCommand.COOLDOWNS.containsKey(player.getUniqueId())){
+			if(System.currentTimeMillis() - ReportCommand.COOLDOWNS.get(player.getUniqueId()) < 100000L){
 				player.sendMessage(RED + "You must wait before attempting to reporting a player again.");
 				return false;
 			}
@@ -59,7 +60,7 @@ public class ReportCommand implements CommandExecutor{
 		return true;
 	}
 
-	static {
+	static{
 		COOLDOWNS = new HashMap<>();
 	}
 }

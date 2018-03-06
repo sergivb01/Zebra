@@ -6,31 +6,30 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-public class Publisher {
+public class Publisher{
 	@Getter private JedisPool pool;
 	private String channel;
 
 	public Publisher(){
-		if(ConfigUtils.REDIS_AUTH_ENABLED) {
-			pool = new JedisPool(new JedisPoolConfig(), ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT,  ConfigUtils.REDIS_TIMEOUT,  ConfigUtils.REDIS_AUTH_PASSWORD);
-		}else {
-			pool = new JedisPool(new JedisPoolConfig(), ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT,  ConfigUtils.REDIS_TIMEOUT);
+		if(ConfigUtils.REDIS_AUTH_ENABLED){
+			pool = new JedisPool(new JedisPoolConfig(), ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT, ConfigUtils.REDIS_TIMEOUT, ConfigUtils.REDIS_AUTH_PASSWORD);
+		}else{
+			pool = new JedisPool(new JedisPoolConfig(), ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT, ConfigUtils.REDIS_TIMEOUT);
 		}
 		this.channel = ConfigUtils.REDIS_CHANNEL;
 	}
 
-	public void write(final String message) {
+	public void write(final String message){
 		Jedis jedis = null;
-		try {
+		try{
 			jedis = pool.getResource();
 			if(ConfigUtils.REDIS_AUTH_ENABLED){
 				jedis.auth(ConfigUtils.REDIS_AUTH_PASSWORD);
 			}
 			jedis.publish(channel, message);
 			pool.returnResource(jedis);
-		}
-		finally {
-			if (jedis != null) {
+		}finally{
+			if(jedis != null){
 				jedis.close();
 			}
 		}

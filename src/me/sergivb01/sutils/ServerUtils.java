@@ -37,6 +37,7 @@ public class ServerUtils extends JavaPlugin{
 		getCommand("request").setExecutor(new RequestCommand());
 		getCommand("sc").setExecutor(new StaffChatCommand());
 		getCommand("staffserver").setExecutor(new StaffServerCommand(this));
+		getCommand("dhist").setExecutor(new DeathHistoryCommand());
 
 		//Test command
 		getCommand("test").setExecutor(new TestCommand());

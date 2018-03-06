@@ -8,7 +8,7 @@ import me.sergivb01.sutils.utils.ConfigUtils;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 
-public class RedisDatabase {
+public class RedisDatabase{
 	@Getter public static ServerUtils instance;
 	@Getter public static Publisher publisher;
 	@Getter public static Subscriber subscriber;
@@ -18,7 +18,7 @@ public class RedisDatabase {
 		init();
 	}
 
-	private void init() {
+	private void init(){
 		publisher = new Publisher();
 		subscriber = new Subscriber(instance);
 	}

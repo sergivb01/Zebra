@@ -49,7 +49,7 @@ public class PlayerListener implements Listener{
 				.tooltip("Click to open your profile")
 				.send(player);
 
-		doAsyncLater(()->{
+		doAsyncLater(() -> {
 			MongoDBDatabase.saveProfileToDatabase(player, true);
 			player.sendMessage(YELLOW + "Your profile has been saved.");
 
@@ -80,7 +80,7 @@ public class PlayerListener implements Listener{
 		}
 	}
 
-	@EventHandler(ignoreCancelled=true, priority= EventPriority.HIGH)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onPlayerDeath(PlayerDeathEvent event){
 		if(ConfigurationService.KIT_MAP){
 			return;
@@ -105,7 +105,7 @@ public class PlayerListener implements Listener{
 		addDeathSave(document);
 	}
 
-	private void doAsyncLater (Runnable runnable, long delay){
+	private void doAsyncLater(Runnable runnable, long delay){
 		Bukkit.getScheduler().runTaskLaterAsynchronously(instance, runnable, delay);
 	}
 

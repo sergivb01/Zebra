@@ -18,20 +18,20 @@ import static org.bukkit.ChatColor.RED;
 public class RequestCommand implements CommandExecutor{
 	private static final Map<UUID, Long> COOLDOWNS;
 
-	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args) {
+	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args){
 		if(!(sender instanceof Player)){
 			sender.sendMessage(RED + "Only players nigger.");
 			return false;
 		}
 		Player player = (Player) sender;
 
-		if (args.length == 0) {
+		if(args.length == 0){
 			player.sendMessage(RED + "Usage: /request <reason...>");
 			return false;
 		}
 
-		if (RequestCommand.COOLDOWNS.containsKey(player.getUniqueId())) {
-			if (System.currentTimeMillis() - RequestCommand.COOLDOWNS.get(player.getUniqueId()) < 100000L) {
+		if(RequestCommand.COOLDOWNS.containsKey(player.getUniqueId())){
+			if(System.currentTimeMillis() - RequestCommand.COOLDOWNS.get(player.getUniqueId()) < 100000L){
 				player.sendMessage(RED + "You must wait before attempting to request staff assistance again.");
 				return false;
 			}
@@ -45,7 +45,7 @@ public class RequestCommand implements CommandExecutor{
 		return true;
 	}
 
-	static {
+	static{
 		COOLDOWNS = new HashMap<>();
 	}
 }

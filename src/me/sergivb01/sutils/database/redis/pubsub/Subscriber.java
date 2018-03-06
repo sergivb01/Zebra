@@ -17,13 +17,12 @@ import java.util.stream.Collectors;
 
 import static org.bukkit.ChatColor.*;
 
-public class Subscriber {
-	@Getter private boolean BACKEND_UP = true;
+public class Subscriber{
 	private ServerUtils instance;
 	@Getter private JedisPubSub jedisPubSub;
 	private Jedis jedis;
 
-	public Subscriber(ServerUtils instance) {
+	public Subscriber(ServerUtils instance){
 		this.instance = instance;
 		this.jedis = new Jedis(ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT, ConfigUtils.REDIS_TIMEOUT);
 		if(ConfigUtils.REDIS_AUTH_ENABLED){
@@ -32,23 +31,23 @@ public class Subscriber {
 		this.init();
 	}
 
-	private void init() {
+	private void init(){
 		jedisPubSub = this.get();
 		new Thread(() -> jedis.subscribe(jedisPubSub, ConfigUtils.REDIS_CHANNEL)).start();
 	}
 
-	private JedisPubSub get() {
-		return new JedisPubSub() {
+	private JedisPubSub get(){
+		return new JedisPubSub(){
 			@Override
-			public void onMessage(final String channel, final String message) {
+			public void onMessage(final String channel, final String message){
 				final String[] args = message.split(";");
 				final String command = args[0].toLowerCase();
 
-				if (args.length > 3) {
+				if(args.length > 3){
 					final String sender = args[1];
 					final String server = args[2];
 					final String msg = args[3];
-					switch (command) {
+					switch(command){
 						case "payload":
 							PayloadParser.parse(Document.parse(sender));
 							break;
@@ -141,11 +140,20 @@ public class Subscriber {
 				}
 			}
 
-			public void onPMessage(final String s, final String s1, final String s2) { }
-			public void onSubscribe(final String s, final int i) { }
-			public void onUnsubscribe(final String s, final int i) { }
-			public void onPUnsubscribe(final String s, final int i) { }
-			public void onPSubscribe(final String s, final int i) {}
+			public void onPMessage(final String s, final String s1, final String s2){
+			}
+
+			public void onSubscribe(final String s, final int i){
+			}
+
+			public void onUnsubscribe(final String s, final int i){
+			}
+
+			public void onPUnsubscribe(final String s, final int i){
+			}
+
+			public void onPSubscribe(final String s, final int i){
+			}
 		};
 
 	}
