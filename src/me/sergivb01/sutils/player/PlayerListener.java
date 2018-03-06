@@ -91,7 +91,8 @@ public class PlayerListener implements Listener{
 
 		Location location = event.getEntity().getLocation();
 
-		Document document = new Document("dead", playerUUID)
+		Document document = new Document("death_id", UUID.randomUUID())
+				.append("dead", playerUUID)
 				.append("dead_str", playerUUID.toString())
 				.append("killer", (killerUUID != null) ? killerUUID : "ENVIRONMENT")
 				.append("killer_str", (killerUUID != null) ? killerUUID.toString() : "ENVIRONMENT")
