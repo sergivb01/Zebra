@@ -9,18 +9,16 @@ import org.bson.Document;
 import org.bukkit.Bukkit;
 
 public class RedisDatabase{
-	@Getter public static ServerUtils instance;
-	@Getter public static Publisher publisher;
-	@Getter public static Subscriber subscriber;
+	@Getter
+	public static ServerUtils instance;
+	@Getter
+	public static Publisher publisher;
+	@Getter
+	public static Subscriber subscriber;
 
 	public RedisDatabase(ServerUtils instance){
 		RedisDatabase.instance = instance;
 		init();
-	}
-
-	private void init(){
-		publisher = new Publisher();
-		subscriber = new Subscriber(instance);
 	}
 
 	public static void sendStatus(boolean up){
@@ -34,6 +32,11 @@ public class RedisDatabase{
 				.append("whitelist", Bukkit.hasWhitelist())
 				.append("maxplayers", Bukkit.getMaxPlayers());
 		RedisDatabase.getPublisher().write("payload;" + ConfigUtils.SERVER_NAME + ";" + document.toJson());
+	}
+
+	private void init(){
+		publisher = new Publisher();
+		subscriber = new Subscriber(instance);
 	}
 
 

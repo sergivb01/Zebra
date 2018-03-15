@@ -1,6 +1,6 @@
 package me.sergivb01.sutils.utils;
 
-public class ArrayUtils {
+public class ArrayUtils{
 
 	public static String joinString(String[] args, String separator, int index){
 		StringBuilder str = new StringBuilder();

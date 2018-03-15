@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InventoryUtils {
+public class InventoryUtils{
 
 	public static String getInventoryAsJSON(Player player){
 		Map<String, String> invMap = new HashMap<>();

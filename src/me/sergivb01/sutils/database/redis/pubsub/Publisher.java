@@ -7,7 +7,8 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 public class Publisher{
-	@Getter private JedisPool pool;
+	@Getter
+	private JedisPool pool;
 	private String channel;
 
 	public Publisher(){

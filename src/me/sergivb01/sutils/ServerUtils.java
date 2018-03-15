@@ -15,9 +15,13 @@ import java.util.Map;
 
 public class ServerUtils extends JavaPlugin{
 
+	public static void broadcastKoth(String kothName){
+		RedisDatabase.getPublisher().write("koth;" + kothName + ";" + ConfigUtils.SERVER_NAME + ";placeholder");
+	}
+
 	public void onEnable(){
 		final File configFile = new File(this.getDataFolder() + "/config.yml");
-		if (!configFile.exists()) {
+		if(!configFile.exists()){
 			this.saveDefaultConfig();
 		}
 		this.getConfig().options().copyDefaults(true);
@@ -45,7 +49,7 @@ public class ServerUtils extends JavaPlugin{
 
 
 		Map<String, Map<String, Object>> map = getDescription().getCommands();
-		for (Map.Entry<String, Map<String, Object>> entry : map.entrySet()) {
+		for(Map.Entry<String, Map<String, Object>> entry : map.entrySet()){
 			PluginCommand command = getCommand(entry.getKey());
 			command.setPermission("sutils.command." + entry.getKey());
 			command.setPermissionMessage(ChatColor.translateAlternateColorCodes('&', "&e&l⚠ &cYou do not have permissions to execute this command."));
@@ -58,10 +62,6 @@ public class ServerUtils extends JavaPlugin{
 
 		RedisDatabase.getSubscriber().getJedisPubSub().unsubscribe();
 		RedisDatabase.getPublisher().getPool().destroy();
-	}
-
-	public static void broadcastKoth(String kothName){
-		RedisDatabase.getPublisher().write("koth;" + kothName + ";" + ConfigUtils.SERVER_NAME + ";placeholder");
 	}
 
 

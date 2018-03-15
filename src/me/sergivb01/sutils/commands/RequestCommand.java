@@ -18,6 +18,10 @@ import static org.bukkit.ChatColor.RED;
 public class RequestCommand implements CommandExecutor{
 	private static final Map<UUID, Long> COOLDOWNS;
 
+	static{
+		COOLDOWNS = new HashMap<>();
+	}
+
 	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args){
 		if(!(sender instanceof Player)){
 			sender.sendMessage(RED + "Only players nigger.");
@@ -43,9 +47,5 @@ public class RequestCommand implements CommandExecutor{
 		RequestCommand.COOLDOWNS.put(player.getUniqueId(), System.currentTimeMillis());
 
 		return true;
-	}
-
-	static{
-		COOLDOWNS = new HashMap<>();
 	}
 }

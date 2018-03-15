@@ -4,10 +4,14 @@ import lombok.Getter;
 import org.bson.Document;
 
 public class Server{
-	@Getter private String name;
-	@Getter private int players;
-	@Getter private int max;
-	@Getter private boolean online;
+	@Getter
+	private String name;
+	@Getter
+	private int players;
+	@Getter
+	private int max;
+	@Getter
+	private boolean online;
 
 	public Server(String name, int players, int max){
 		this.name = name;

@@ -8,9 +8,10 @@ import me.sergivb01.sutils.utils.ConfigUtils;
 import org.bukkit.Bukkit;
 
 public class AgentManager{
-	private ServerUtils instance;
-	@Getter public static Agent agent;
+	@Getter
+	public static Agent agent;
 	private static String prefix = "mcserver.";
+	private ServerUtils instance;
 
 	public AgentManager(ServerUtils instance){
 		this.instance = instance;

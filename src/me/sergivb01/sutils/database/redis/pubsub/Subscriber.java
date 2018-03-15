@@ -18,7 +18,8 @@ import static org.bukkit.ChatColor.*;
 
 public class Subscriber{
 	private ServerUtils instance;
-	@Getter private JedisPubSub jedisPubSub;
+	@Getter
+	private JedisPubSub jedisPubSub;
 	private Jedis jedis;
 
 	public Subscriber(ServerUtils instance){

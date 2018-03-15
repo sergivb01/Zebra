@@ -32,23 +32,6 @@ public class MongoDBDatabase{
 		init();
 	}
 
-	private void init(){
-		MongoClientURI uri;
-		if(ConfigUtils.MONGO_AUTH_ENABLED){
-			uri = new MongoClientURI("mongodb://" + ConfigUtils.MONGO_USERNAME + ":" + ConfigUtils.MONGO_AUTH_PASSWORD + "@" + ConfigUtils.MONGO_HOST + ":" + ConfigUtils.MONGO_PORT + "/?authSource=" + ConfigUtils.MONGO_DATABASE);
-		}else{
-			uri = new MongoClientURI("mongodb://" + ConfigUtils.MONGO_HOST + ":" + ConfigUtils.MONGO_PORT + "/?authSource=" + ConfigUtils.MONGO_DATABASE);
-		}
-
-		MongoClient mongoClient = new MongoClient(uri);
-
-		MongoDatabase mongoDatabase = mongoClient.getDatabase(ConfigUtils.MONGO_DATABASE);
-		playercollection = mongoDatabase.getCollection("playerdata");
-		factionCollection = mongoDatabase.getCollection("factions");
-		deathCollection = mongoDatabase.getCollection("deaths");
-
-	}
-
 	public static void addDeathSave(Document document){
 		deathCollection.insertOne(document);
 		if(ConfigUtils.DEBUG){
@@ -148,7 +131,6 @@ public class MongoDBDatabase{
 		).sort(new Document("timestamp", -1)).limit(20);
 	}
 
-
 	private static PlayerVersion getVersionForPlayer(Player player){
 		int version = ((CraftPlayer) player).getHandle().playerConnection.networkManager.getVersion();
 		if(version >= 47){
@@ -157,6 +139,23 @@ public class MongoDBDatabase{
 			return PlayerVersion.Version_1_7;
 		}
 		return PlayerVersion.UNKOWN;
+	}
+
+	private void init(){
+		MongoClientURI uri;
+		if(ConfigUtils.MONGO_AUTH_ENABLED){
+			uri = new MongoClientURI("mongodb://" + ConfigUtils.MONGO_USERNAME + ":" + ConfigUtils.MONGO_AUTH_PASSWORD + "@" + ConfigUtils.MONGO_HOST + ":" + ConfigUtils.MONGO_PORT + "/?authSource=" + ConfigUtils.MONGO_DATABASE);
+		}else{
+			uri = new MongoClientURI("mongodb://" + ConfigUtils.MONGO_HOST + ":" + ConfigUtils.MONGO_PORT + "/?authSource=" + ConfigUtils.MONGO_DATABASE);
+		}
+
+		MongoClient mongoClient = new MongoClient(uri);
+
+		MongoDatabase mongoDatabase = mongoClient.getDatabase(ConfigUtils.MONGO_DATABASE);
+		playercollection = mongoDatabase.getCollection("playerdata");
+		factionCollection = mongoDatabase.getCollection("factions");
+		deathCollection = mongoDatabase.getCollection("deaths");
+
 	}
 
 }
