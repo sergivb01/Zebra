@@ -8,5 +8,6 @@ commands:
   staffserver:
   dhist:
   test:
+  debug:
   request:
     aliases: [helpop]

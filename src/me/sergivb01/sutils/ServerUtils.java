@@ -41,6 +41,7 @@ public class ServerUtils extends JavaPlugin{
 
 		//Test command
 		getCommand("test").setExecutor(new TestCommand());
+		getCommand("debug").setExecutor(new DebugCommand());
 
 
 		Map<String, Map<String, Object>> map = getDescription().getCommands();
