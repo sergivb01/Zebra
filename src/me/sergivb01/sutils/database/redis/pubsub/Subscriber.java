@@ -2,9 +2,8 @@ package me.sergivb01.sutils.database.redis.pubsub;
 
 import lombok.Getter;
 import me.sergivb01.sutils.ServerUtils;
-import me.sergivb01.sutils.database.redis.RedisDatabase;
-import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.payload.PayloadParser;
+import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
 import org.bson.Document;
 import org.bukkit.Bukkit;
@@ -43,17 +42,17 @@ public class Subscriber{
 				final String[] args = message.split(";");
 				final String command = args[0].toLowerCase();
 
+				if(command.equalsIgnoreCase("payload")){
+					PayloadParser.parse(Document.parse(args[1]));
+					instance.getLogger().info("[Payload] Recived payload - Timestamp = " + args[2]);
+					return;
+				}
+
 				if(args.length > 3){
 					final String sender = args[1];
 					final String server = args[2];
 					final String msg = args[3];
 					switch(command){
-						case "payload":
-							PayloadParser.parse(Document.parse(sender));
-							break;
-						case "reqserverstatus":
-							if(sender.equalsIgnoreCase(ConfigUtils.SERVER_NAME)) RedisDatabase.sendStatus(true);
-							break;
 						case "koth":
 							new FancyMessage(DARK_GRAY + "[" + BLUE + server + DARK_GRAY + "]")
 									.then("Event ")
@@ -81,7 +80,8 @@ public class Subscriber{
 									.command("/tp " + sender)
 									.tooltip(GRAY + "Click to teleport to " + sender)
 									.color(AQUA)
-									.then(msg).send(getStaff());
+									.then(msg)
+									.send(getStaff());
 							break;
 						case "request":
 							new FancyMessage("[Request] ")
