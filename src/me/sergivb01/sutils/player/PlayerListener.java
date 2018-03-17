@@ -99,7 +99,7 @@ public class PlayerListener implements Listener{
 				.append("deathmsg", deathMSG)
 				.append("location", location.getBlockX() + ";" + location.getBlockY() + ";" + location.getBlockZ())
 				.append("content-death", getInventoryAsJSON(event.getEntity()))
-				.append("content-killer", (killerUUID != null) ? getInventoryAsJSON(event.getEntity().getKiller()).getBytes() : "none")
+				.append("content-killer", (killerUUID != null) ? getInventoryAsJSON(event.getEntity().getKiller()) : "none")
 				.append("server", ConfigUtils.SERVER_NAME)
 				.append("timestamp", System.currentTimeMillis());
 
