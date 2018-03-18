@@ -2,10 +2,8 @@ package me.sergivb01.sutils.database.redis.pubsub;
 
 import lombok.Getter;
 import me.sergivb01.sutils.ServerUtils;
-import me.sergivb01.sutils.payload.PayloadParser;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
-import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import redis.clients.jedis.Jedis;
@@ -43,11 +41,12 @@ public class Subscriber{
 				final String[] args = message.split(";");
 				final String command = args[0].toLowerCase();
 
+				/* //TODO: Causing crash/lag
 				if(command.equalsIgnoreCase("payload")){
 					PayloadParser.parse(Document.parse(args[1]));
 					instance.getLogger().info("[Payload] Recived payload - Timestamp = " + args[2]);
 					return;
-				}
+				}*/
 
 				if(args.length > 3){
 					final String sender = args[1];
