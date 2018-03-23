@@ -24,7 +24,6 @@ public class DebugCommand implements CommandExecutor{
 		sender.sendMessage(BLUE + "Name: " + WHITE + target.getName());
 		sender.sendMessage(BLUE + "Custom name: " + target.getCustomName());
 		sender.sendMessage(BLUE + "UUID: " + WHITE + target.getUniqueId());
-		sender.sendMessage(BLUE + "UUID_str: " + WHITE + target.getUniqueId().toString());
 		sender.sendMessage(BLUE + "Playerlist name: " + WHITE + target.getPlayerListName());
 		sender.sendMessage(BLUE + "Address: " + WHITE + target.getAddress().toString());
 		//TODO: Add more
