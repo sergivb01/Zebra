@@ -4,11 +4,22 @@ version: 1.0
 author: sergivb01
 commands:
   sc:
+    description: "Private staff chat system cross server"
+    aliases: [ac, staffchat, adminchat]
   report:
+    description: "Allows you to report players that are breaking the rules"
   staffserver:
-  status:
+    description: "Allows you to move around different servers in the network"
+    aliases: [srv, sserver]
   dhist:
+    description: "Check recent deaths from a player"
+    aliases: [deathhistory, deaths]
   test:
   debug:
   request:
+    description: "Allows you to request staff help"
     aliases: [helpop]
+  status:
+    description: "Displays a dirt message about other server statuses"
+  rstatus:
+    description: "Developer-only - Allows to send a request status payload to another server"

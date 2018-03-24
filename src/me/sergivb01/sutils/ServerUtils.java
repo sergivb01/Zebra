@@ -45,6 +45,7 @@ public class ServerUtils extends JavaPlugin{
 		getCommand("staffserver").setExecutor(new StaffServerCommand(this));
 		getCommand("dhist").setExecutor(new DeathHistoryCommand());
 		getCommand("status").setExecutor(new StatusCommand());
+		getCommand("rstatus").setExecutor(new RequestStatusCommand());
 
 		//Test command
 		getCommand("test").setExecutor(new TestCommand());
