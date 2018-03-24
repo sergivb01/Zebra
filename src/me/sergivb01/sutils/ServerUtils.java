@@ -7,6 +7,7 @@ import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.payload.PayloadSender;
 import me.sergivb01.sutils.player.PlayerListener;
 import me.sergivb01.sutils.utils.ConfigUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,7 +57,7 @@ public class ServerUtils extends JavaPlugin{
 			command.setPermissionMessage(ChatColor.translateAlternateColorCodes('&', "&e&l⚠ &cYou do not have permissions to execute this command."));
 		}
 
-		PayloadSender.sendData(true);
+		Bukkit.getScheduler().runTaskLater(this, ()-> PayloadSender.sendData(true), 3 * 20L);
 	}
 
 	public void onDisable(){

@@ -20,9 +20,10 @@ public class PayloadParser{
 		String type = doc.getString("type");
 
 		switch(type.toLowerCase()){
-			case "reqserverstatus":{
-				if(doc.getString("server").equalsIgnoreCase(ConfigUtils.SERVER_NAME)){
+			case "reqdata":{
+				if(doc.getString("req-server").equalsIgnoreCase(ConfigUtils.SERVER_NAME)){
 					PayloadSender.sendData(true);
+					//TODO: somehow this doesn't parse well
 				}
 				break;
 			}

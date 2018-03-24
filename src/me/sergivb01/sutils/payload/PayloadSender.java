@@ -8,11 +8,6 @@ import org.bukkit.Bukkit;
 
 public class PayloadSender{
 
-	/*
-		TODO:
-			* Koths
-	 */
-
 	public static void sendKoth(String koth){
 		sendPayload(
 				new Document("type", "koth")
