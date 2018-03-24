@@ -2,17 +2,16 @@ package me.sergivb01.sutils.database.redis.pubsub;
 
 import lombok.Getter;
 import me.sergivb01.sutils.ServerUtils;
+import me.sergivb01.sutils.payload.PayloadParser;
 import me.sergivb01.sutils.utils.ConfigUtils;
-import me.sergivb01.sutils.utils.fanciful.FancyMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
-
-import static org.bukkit.ChatColor.*;
 
 public class Subscriber{
 	private ServerUtils instance;
@@ -41,14 +40,15 @@ public class Subscriber{
 				final String[] args = message.split(";");
 				final String command = args[0].toLowerCase();
 
-				/* //TODO: Causing crash/lag
-				if(command.equalsIgnoreCase("payload")){
-					PayloadParser.parse(Document.parse(args[1]));
-					instance.getLogger().info("[Payload] Recived payload - Timestamp = " + args[2]);
-					return;
-				}*/
 
-				if(args.length > 3){
+				if(command.equalsIgnoreCase("payload")){
+					PayloadParser.parse(args[1]);
+					return;
+				}
+
+				instance.getLogger().warning("Recived unknown redis message! " + Arrays.toString(args));
+
+				/*if(args.length > 3){
 					final String sender = args[1];
 					final String server = args[2];
 					final String msg = args[3];
@@ -139,7 +139,7 @@ public class Subscriber{
 							System.out.println("I don't know how to handle this dude! [" + message + "]");
 							break;
 					}
-				}
+				}*/
 			}
 
 			public void onPMessage(final String s, final String s1, final String s2){

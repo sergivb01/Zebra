@@ -1,7 +1,6 @@
 package me.sergivb01.sutils.commands;
 
-import me.sergivb01.sutils.database.redis.RedisDatabase;
-import me.sergivb01.sutils.utils.ConfigUtils;
+import me.sergivb01.sutils.payload.PayloadSender;
 import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -57,7 +56,7 @@ public class ReportCommand implements CommandExecutor{
 		}
 
 
-		RedisDatabase.getPublisher().write("report;" + player.getDisplayName() + ";" + ConfigUtils.SERVER_NAME + ";" + StringUtils.join(args, " ").replace(";", ":") + ";" + reported.getDisplayName());
+		PayloadSender.sendReport(player.getName(), reported.getName(), StringUtils.join(args, " ").replace(";", ":"));
 		player.sendMessage(GREEN + "Staff have been notified of your player report.");
 		ReportCommand.COOLDOWNS.put(player.getUniqueId(), System.currentTimeMillis());
 

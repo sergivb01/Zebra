@@ -1,7 +1,6 @@
 package me.sergivb01.sutils.commands;
 
-import me.sergivb01.sutils.database.redis.RedisDatabase;
-import me.sergivb01.sutils.utils.ConfigUtils;
+import me.sergivb01.sutils.payload.PayloadSender;
 import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 import net.veilmc.base.BasePlugin;
 import net.veilmc.base.command.BaseCommand;
@@ -33,7 +32,7 @@ public class StaffChatCommand implements CommandExecutor{
 		}else{
 			Player targetPlayer = Bukkit.getPlayerExact(args[0]);
 			if(!BaseCommand.canSee(sender, targetPlayer) || !sender.hasPermission("command.staffchat.others")){
-				RedisDatabase.getPublisher().write("staffchat;" + sender.getName() + ";" + ConfigUtils.SERVER_NAME + ";" + StringUtils.join(args, " ").replace(";", ":"));
+				PayloadSender.sendStaffchat(sender.getName(), StringUtils.join(args, " ").replace(";", ":"));
 				return true;
 			}
 			target = BasePlugin.getPlugin().getUserManager().getUser(targetPlayer.getUniqueId());

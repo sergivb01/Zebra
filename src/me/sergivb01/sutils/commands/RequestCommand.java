@@ -1,7 +1,6 @@
 package me.sergivb01.sutils.commands;
 
-import me.sergivb01.sutils.database.redis.RedisDatabase;
-import me.sergivb01.sutils.utils.ConfigUtils;
+import me.sergivb01.sutils.payload.PayloadSender;
 import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,7 +41,7 @@ public class RequestCommand implements CommandExecutor{
 			RequestCommand.COOLDOWNS.remove(player.getUniqueId());
 		}
 
-		RedisDatabase.getPublisher().write("request;" + player.getDisplayName() + ";" + ConfigUtils.SERVER_NAME + ";" + StringUtils.join(args, " ").replace(";", ":"));
+		PayloadSender.sendRequest(player.getName(), StringUtils.join(args, " ").replace(";", ":"));
 		player.sendMessage(GREEN + "Staff have been notified of your request.");
 		RequestCommand.COOLDOWNS.put(player.getUniqueId(), System.currentTimeMillis());
 

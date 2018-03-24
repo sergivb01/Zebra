@@ -15,13 +15,14 @@ import static org.bukkit.ChatColor.*;
 
 public class PayloadParser{
 
-	public static void parse(Document doc){
+	public static void parse(String docStr){
+		Document doc = Document.parse(docStr);
 		String type = doc.getString("type");
 
 		switch(type.toLowerCase()){
 			case "reqserverstatus":{
 				if(doc.getString("server").equalsIgnoreCase(ConfigUtils.SERVER_NAME)){
-					RedisDatabase.sendStatus(true);
+					//RedisDatabase.sendStatus(true);
 				}
 				break;
 			}
@@ -33,7 +34,7 @@ public class PayloadParser{
 
 			case "staffchat":{
 				String server = doc.getString("server");
-				String sender = doc.getString("sender");
+				String sender = doc.getString("player");
 				String msg = doc.getString("message");
 				new FancyMessage("(Staff) ")
 						.color(BLUE)
@@ -41,7 +42,7 @@ public class PayloadParser{
 						.color(DARK_AQUA)
 						.command("/staffserver " + server)
 						.tooltip(GRAY + "Click to teleport to " + server)
-						.then(doc.getString("sender") + ": ")
+						.then(doc.getString("player") + ": ")
 						.command("/tp " + doc)
 						.tooltip(GRAY + "Click to teleport to " + sender)
 						.then(msg)
@@ -71,7 +72,7 @@ public class PayloadParser{
 
 			case "request":{
 				String server = doc.getString("server");
-				String sender = doc.getString("sender");
+				String sender = doc.getString("player");
 				String msg = doc.getString("message");
 				new FancyMessage("[Request] ")
 						.color(BLUE)
@@ -85,8 +86,8 @@ public class PayloadParser{
 						.color(AQUA)
 						.then(" has requested assistance.")
 						.color(GRAY)
-						.text("\n")
-						.then("   Reason: ")
+						.send(getStaff());
+				new FancyMessage("   Reason: ")
 						.color(BLUE)
 						.then(msg)
 						.color(GRAY)
@@ -96,7 +97,7 @@ public class PayloadParser{
 
 			case "report":{
 				String server = doc.getString("server");
-				String reportedPlayer = doc.getString("reported");
+				String reportedPlayer = doc.getString("target");
 				String sender = doc.getString("sender");
 				String msg = doc.getString("message");
 
@@ -113,8 +114,8 @@ public class PayloadParser{
 						.then(" has been reported.")
 						.tooltip(GRAY + "Report submitted by " + AQUA + sender)
 						.color(GRAY)
-						.text("\n")
-						.then("   Reason: ")
+						.send(getStaff());
+				new FancyMessage("   Reason: ")
 						.color(RED)
 						.then(msg.replace(reportedPlayer + " ", ""))
 						.color(GRAY)
@@ -124,19 +125,22 @@ public class PayloadParser{
 
 			case "staffswitch":{
 				String server = doc.getString("server");
-				String sender = doc.getString("sender");
-				String msg = doc.getString("message");
+				String sender = doc.getString("player");
+				String msg = doc.getString("action");
 
 				new FancyMessage("(Staff) ")
 						.color(BLUE)
 						.then("[" + server + "] ")
 						.color(DARK_AQUA)
 						.command("/staffserver " + server)
-						.then(sender + " has " + msg + ".")
+						.then(sender + " has " + msg + " " + server + ".")
 						.color(AQUA)
 						.send(getStaff());
 				break;
 			}
+			default:
+				RedisDatabase.instance.getLogger().warning("UNKNOWN TYPE OF PAYLOAD: " + type + " Payload JSON: " + doc.toJson());
+				break;
 
 		}
 
