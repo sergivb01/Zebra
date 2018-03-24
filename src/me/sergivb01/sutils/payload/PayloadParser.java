@@ -22,12 +22,12 @@ public class PayloadParser{
 		switch(type.toLowerCase()){
 			case "reqserverstatus":{
 				if(doc.getString("server").equalsIgnoreCase(ConfigUtils.SERVER_NAME)){
-					//RedisDatabase.sendStatus(true);
+					PayloadSender.sendData(true);
 				}
 				break;
 			}
 
-			case "srvdata":{
+			case "data":{
 				ServerCache.handleData(doc.getString("server"), doc);
 				break;
 			}

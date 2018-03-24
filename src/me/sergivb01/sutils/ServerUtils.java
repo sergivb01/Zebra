@@ -4,6 +4,7 @@ import me.sergivb01.sutils.commands.*;
 import me.sergivb01.sutils.database.agent.AgentManager;
 import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
+import me.sergivb01.sutils.payload.PayloadSender;
 import me.sergivb01.sutils.player.PlayerListener;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import org.bukkit.ChatColor;
@@ -16,7 +17,7 @@ import java.util.Map;
 public class ServerUtils extends JavaPlugin{
 
 	public static void broadcastKoth(String kothName){
-		RedisDatabase.getPublisher().write("koth;" + kothName + ";" + ConfigUtils.SERVER_NAME + ";placeholder");
+		PayloadSender.sendKoth(kothName);
 	}
 
 	public void onEnable(){
@@ -55,10 +56,11 @@ public class ServerUtils extends JavaPlugin{
 			command.setPermissionMessage(ChatColor.translateAlternateColorCodes('&', "&e&l⚠ &cYou do not have permissions to execute this command."));
 		}
 
+		PayloadSender.sendData(true);
 	}
 
 	public void onDisable(){
-		//RedisDatabase.sendStatus(false);
+		PayloadSender.sendData(false);
 
 		RedisDatabase.getSubscriber().getJedisPubSub().unsubscribe();
 		RedisDatabase.getPublisher().getPool().destroy();
