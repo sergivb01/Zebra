@@ -6,6 +6,7 @@ import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -18,6 +19,7 @@ public class PayloadParser{
 	public static void parse(String docStr){
 		Document doc = Document.parse(docStr);
 		String type = doc.getString("type");
+		String server = (String) doc.getOrDefault("server", "none");
 
 		switch(type.toLowerCase()){
 			case "reqdata":{
@@ -28,13 +30,21 @@ public class PayloadParser{
 				break;
 			}
 
+			case "sendmessage":{
+				Player player = Bukkit.getPlayer(doc.getString("player"));
+				String message = doc.getString("message");
+				if(player != null && player.isOnline()){
+					player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+				}
+				break;
+			}
+
 			case "data":{
 				ServerCache.handleData(doc.getString("server"), doc);
 				break;
 			}
 
 			case "staffchat":{
-				String server = doc.getString("server");
 				String sender = doc.getString("player");
 				String msg = doc.getString("message");
 				new FancyMessage("(Staff) ")
@@ -52,7 +62,6 @@ public class PayloadParser{
 			}
 
 			case "koth":{
-				String server = doc.getString("server");
 				String koth = doc.getString("koth");
 
 				new FancyMessage(DARK_GRAY + "[" + BLUE + server + DARK_GRAY + "]")
@@ -72,7 +81,6 @@ public class PayloadParser{
 			}
 
 			case "request":{
-				String server = doc.getString("server");
 				String sender = doc.getString("player");
 				String msg = doc.getString("message");
 				new FancyMessage("[Request] ")
@@ -97,7 +105,6 @@ public class PayloadParser{
 			}
 
 			case "report":{
-				String server = doc.getString("server");
 				String reportedPlayer = doc.getString("target");
 				String sender = doc.getString("sender");
 				String msg = doc.getString("message");
@@ -125,7 +132,6 @@ public class PayloadParser{
 			}
 
 			case "staffswitch":{
-				String server = doc.getString("server");
 				String sender = doc.getString("player");
 				String msg = doc.getString("action");
 

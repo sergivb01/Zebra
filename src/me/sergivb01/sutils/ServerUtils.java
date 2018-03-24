@@ -44,6 +44,7 @@ public class ServerUtils extends JavaPlugin{
 		getCommand("sc").setExecutor(new StaffChatCommand());
 		getCommand("staffserver").setExecutor(new StaffServerCommand(this));
 		getCommand("dhist").setExecutor(new DeathHistoryCommand());
+		getCommand("status").setExecutor(new StatusCommand());
 
 		//Test command
 		getCommand("test").setExecutor(new TestCommand());
@@ -57,7 +58,7 @@ public class ServerUtils extends JavaPlugin{
 			command.setPermissionMessage(ChatColor.translateAlternateColorCodes('&', "&e&l⚠ &cYou do not have permissions to execute this command."));
 		}
 
-		Bukkit.getScheduler().runTaskLater(this, ()-> PayloadSender.sendData(true), 3 * 20L);
+		Bukkit.getScheduler().runTaskLater(this, () -> PayloadSender.sendData(true), 5 * 20L);
 	}
 
 	public void onDisable(){

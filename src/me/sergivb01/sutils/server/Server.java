@@ -40,9 +40,9 @@ public class Server{
 		this.max = payload.getInteger("max");
 		this.whitelist = payload.getBoolean("whitelist");
 		this.donor = payload.getBoolean("donor");
-		this.tps[0] = (double)payload.getOrDefault("tps.tps0", 0.0);
-		this.tps[1] = (double)payload.getOrDefault("tps.tps1", 0.0);
-		this.tps[2] = (double)payload.getOrDefault("tps.tps2", 0.0);
+		this.tps[0] = (double) payload.getOrDefault("tps.tps0", 0.0);
+		this.tps[1] = (double) payload.getOrDefault("tps.tps1", 0.0);
+		this.tps[2] = (double) payload.getOrDefault("tps.tps2", 0.0);
 		this.mute = payload.getBoolean("chat");
 		this.lag = payload.getBoolean("antilag");
 	}
