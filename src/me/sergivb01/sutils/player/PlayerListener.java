@@ -2,7 +2,7 @@ package me.sergivb01.sutils.player;
 
 import me.sergivb01.sutils.ServerUtils;
 import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
-import me.sergivb01.sutils.database.redis.RedisDatabase;
+import me.sergivb01.sutils.payload.PayloadSender;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import me.sergivb01.sutils.utils.fanciful.FancyMessage;
 import net.veilmc.base.BasePlugin;
@@ -54,7 +54,7 @@ public class PlayerListener implements Listener{
 			player.sendMessage(YELLOW + "Your profile has been saved.");
 
 			if(player.hasPermission("rank.staff"))
-				RedisDatabase.getPublisher().write("staffswitch;" + player.getName() + ";" + ConfigUtils.SERVER_NAME + ";joined");
+				PayloadSender.sendSwitch(player.getName(), "joined");
 		}, 20L);
 
 	}
@@ -64,7 +64,7 @@ public class PlayerListener implements Listener{
 		Player player = event.getPlayer();
 		MongoDBDatabase.saveProfileToDatabase(player, false);
 		if(player.hasPermission("rank.staff")){
-			RedisDatabase.getPublisher().write("staffswitch;" + player.getName() + ";" + ConfigUtils.SERVER_NAME + ";quit");
+			PayloadSender.sendSwitch(player.getName(), "left");
 		}
 	}
 
@@ -75,7 +75,7 @@ public class PlayerListener implements Listener{
 			return;
 		}
 		if(BasePlugin.getPlugin().getUserManager().getUser(player.getUniqueId()).isInStaffChat()){//Staffchat
-			RedisDatabase.getPublisher().write("staffchat;" + player.getName() + ";" + ConfigUtils.SERVER_NAME + ";" + event.getMessage().replace(";", ":"));
+			PayloadSender.sendStaffchat(player.getName(), event.getMessage().replace(";", ":"));
 			event.setCancelled(true);
 		}
 	}
