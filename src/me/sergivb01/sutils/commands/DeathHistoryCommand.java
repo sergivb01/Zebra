@@ -8,8 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.*;
 
 public class DeathHistoryCommand implements CommandExecutor{
 

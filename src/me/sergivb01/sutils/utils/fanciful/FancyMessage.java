@@ -18,7 +18,7 @@ import java.io.StringWriter;
 import java.util.*;
 import java.util.logging.Level;
 
-import static me.sergivb01.sutils.utils.fanciful.TextualComponent.rawText;
+import static me.sergivb01.sutils.utils.fanciful.TextualComponent.*;
 
 /**
  * Represents a formattable message. Such messages can use elements such as colors, formatting codes, hover and click data, and other features provided by the vanilla Minecraft <a href="http://minecraft.gamepedia.com/Tellraw#Raw_JSON_Text">JSON message formatter</a>.

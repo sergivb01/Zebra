@@ -21,10 +21,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
 
-import static me.sergivb01.sutils.database.mongo.MongoDBDatabase.addDeathSave;
-import static me.sergivb01.sutils.utils.InventoryUtils.getInventoryAsJSON;
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.YELLOW;
+import static me.sergivb01.sutils.database.mongo.MongoDBDatabase.*;
+import static me.sergivb01.sutils.utils.InventoryUtils.*;
+import static org.bukkit.ChatColor.*;
 
 public class PlayerListener implements Listener{
 	private ServerUtils instance;

@@ -11,8 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.*;
 
 public class RequestCommand implements CommandExecutor{
 	private static final Map<UUID, Long> COOLDOWNS;
