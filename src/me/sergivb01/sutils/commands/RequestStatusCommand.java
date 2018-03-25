@@ -5,9 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.RED;
-import static org.bukkit.ChatColor.YELLOW;
+import static org.bukkit.ChatColor.*;
 
 public class RequestStatusCommand implements CommandExecutor{
 
