@@ -18,8 +18,8 @@ public class PayloadSender{
 	public static void sendStaffImportant(String player, String str){
 		sendPayload(
 				new Document("type", "staffimportant")
-					.append("player", player)
-					.append("command", str)
+						.append("player", player)
+						.append("command", str)
 		);
 	}
 
