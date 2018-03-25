@@ -25,8 +25,23 @@ public class PayloadParser{
 			case "reqdata":{
 				if(doc.getString("req-server").equalsIgnoreCase(ConfigUtils.SERVER_NAME)){
 					PayloadSender.sendData(true);
-					//TODO: somehow this doesn't parse well
 				}
+				break;
+			}
+
+			case "staffimportant":{
+				String player = doc.getString("player");
+				String str = doc.getString("command");
+
+				new FancyMessage("(Staff Abuse) ")
+						.color(DARK_RED)
+						.then(server)
+						.color(RED)
+						.then(" - " + BOLD + "" + AQUA + player + " ")
+						.then("executed " + BOLD)
+						.then(LIGHT_PURPLE + "" + BOLD + str)
+						.send(Bukkit.getOnlinePlayers().stream()
+								.filter(p -> p.hasPermission("sutils.alerts")).collect(Collectors.toList()));
 				break;
 			}
 

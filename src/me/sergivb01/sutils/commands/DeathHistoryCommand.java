@@ -33,6 +33,7 @@ public class DeathHistoryCommand implements CommandExecutor{
 		sender.sendMessage(GREEN + "Last 20 deaths from " + GREEN + target.getName());
 		for(Document doc : MongoDBDatabase.getRecentDeaths(target.getUniqueId())){
 			sender.sendMessage(doc.toJson());
+			//TODO: Make this nice
 		}
 
 

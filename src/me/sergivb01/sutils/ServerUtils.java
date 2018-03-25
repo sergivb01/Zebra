@@ -6,6 +6,7 @@ import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import me.sergivb01.sutils.database.redis.RedisDatabase;
 import me.sergivb01.sutils.payload.PayloadSender;
 import me.sergivb01.sutils.player.PlayerListener;
+import me.sergivb01.sutils.player.StaffListener;
 import me.sergivb01.sutils.utils.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,6 +34,7 @@ public class ServerUtils extends JavaPlugin{
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
 		new PlayerListener(this); //Registers as event itself
+		new StaffListener(this);
 
 		new RedisDatabase(this);
 		new MongoDBDatabase();
