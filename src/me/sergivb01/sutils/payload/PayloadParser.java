@@ -131,7 +131,7 @@ public class PayloadParser{
 						.color(GRAY)
 						.command("/staffserver " + server)
 						.tooltip(GRAY + "Click to teleport to " + server)
-						.then(reportedPlayer + " (" +  count + ")")
+						.then(reportedPlayer + " (" + count + ")")
 						.command("/tp " + reportedPlayer)
 						.tooltip(GRAY + "Click to teleport to " + reportedPlayer)
 						.color(AQUA)
