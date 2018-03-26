@@ -23,7 +23,9 @@ public class StaffListener implements Listener{
 			"lives",
 			"tokens",
 			"pex",
-			"top"
+			"top",
+			"enchant",
+			"death"
 			//TODO: More to add
 	};
 
