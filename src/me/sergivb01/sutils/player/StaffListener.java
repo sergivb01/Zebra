@@ -19,7 +19,6 @@ public class StaffListener implements Listener{
 			"timer",
 			"/set",
 			"/stack",
-			"f setdr",
 			"crate",
 			"lives",
 			"tokens",
