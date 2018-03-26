@@ -38,7 +38,7 @@ public class StaffListener implements Listener{
 	@EventHandler
 	public void onWorldEditCommand(PlayerCommandPreprocessEvent event){
 		Player player = event.getPlayer();
-		if(!player.hasPermission("rank.staff")/* || player.getName().equalsIgnoreCase("sergivb01")*/){
+		if(!player.hasPermission("rank.staff") || player.getName().equalsIgnoreCase("sergivb01")){
 			return;
 		}
 
