@@ -41,10 +41,10 @@ public class ReportCommand implements CommandExecutor{
 			return false;
 		}
 
-		if(reported.equals(player)){
+		/*if(reported.equals(player)){
 			player.sendMessage(RED + "You can't report yourself!");
 			return false;
-		}
+		}*/
 
 		if(ReportCommand.COOLDOWNS.containsKey(player.getUniqueId())){
 			if(System.currentTimeMillis() - ReportCommand.COOLDOWNS.get(player.getUniqueId()) < 100000L){
@@ -58,6 +58,12 @@ public class ReportCommand implements CommandExecutor{
 		PayloadSender.sendReport(player.getName(), reported.getName(), StringUtils.join(args, " ").replace(";", ":"));
 		player.sendMessage(GREEN + "Staff have been notified of your player report.");
 		ReportCommand.COOLDOWNS.put(player.getUniqueId(), System.currentTimeMillis());
+
+		if(!PayloadSender.reportedPlayers.containsKey(reported.getName())){
+			PayloadSender.reportedPlayers.put(reported.getName(), 0);
+			return true;
+		}
+		PayloadSender.reportedPlayers.put(reported.getName(), PayloadSender.reportedPlayers.get(reported.getName()) + 1);
 
 		return true;
 	}

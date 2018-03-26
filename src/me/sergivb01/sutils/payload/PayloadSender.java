@@ -6,7 +6,11 @@ import net.veilmc.base.BasePlugin;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 
+import java.util.HashMap;
+
 public class PayloadSender{
+	public static HashMap<String, Integer> reportedPlayers = new HashMap<>();
+
 
 	public static void sendKoth(String koth){
 		sendPayload(
@@ -75,6 +79,7 @@ public class PayloadSender{
 		sendPayload(
 				new Document("type", "report")
 						.append("sender", sender)
+						.append("count", reportedPlayers.getOrDefault(target, 1))
 						.append("target", target)
 						.append("message", message)
 		);

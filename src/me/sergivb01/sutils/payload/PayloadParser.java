@@ -123,6 +123,7 @@ public class PayloadParser{
 				String reportedPlayer = doc.getString("target");
 				String sender = doc.getString("sender");
 				String msg = doc.getString("message");
+				int count = doc.getInteger("count");
 
 				new FancyMessage("[Report] ")
 						.color(RED)
@@ -130,7 +131,7 @@ public class PayloadParser{
 						.color(GRAY)
 						.command("/staffserver " + server)
 						.tooltip(GRAY + "Click to teleport to " + server)
-						.then(reportedPlayer)
+						.then(reportedPlayer + " (" +  count + ")")
 						.command("/tp " + reportedPlayer)
 						.tooltip(GRAY + "Click to teleport to " + reportedPlayer)
 						.color(AQUA)
