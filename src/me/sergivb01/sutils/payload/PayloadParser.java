@@ -22,6 +22,18 @@ public class PayloadParser{
 		String server = (String) doc.getOrDefault("server", "none");
 
 		switch(type.toLowerCase()){
+			case "cmessage":{
+				String sender = doc.getString("sender");
+				Player player = Bukkit.getPlayer(doc.getString("target"));
+				String message = doc.getString("message");
+				if(player != null && player.isOnline()){
+					player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+							"&9(Staff C-MSG) &7(" + server + ") &b&l" + sender + ": &f" + message
+					));
+				}
+				break;
+			}
+
 			case "reqdata":{
 				if(doc.getString("req-server").equalsIgnoreCase(ConfigUtils.SERVER_NAME)){
 					PayloadSender.sendData(true);
@@ -110,6 +122,8 @@ public class PayloadParser{
 						.color(AQUA)
 						.then(" has requested assistance.")
 						.color(GRAY)
+						.suggest("/cmsg " + sender + " ")
+						.tooltip(GRAY + "Click to send a message to " + AQUA + sender)
 						.send(getStaff());
 				new FancyMessage("   Reason: ")
 						.color(BLUE)

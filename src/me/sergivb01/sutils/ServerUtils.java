@@ -47,11 +47,12 @@ public class ServerUtils extends JavaPlugin{
 		getCommand("staffserver").setExecutor(new StaffServerCommand(this));
 		getCommand("dhist").setExecutor(new DeathHistoryCommand());
 		getCommand("status").setExecutor(new StatusCommand());
-		getCommand("rstatus").setExecutor(new RequestStatusCommand());
+		getCommand("cmsg").setExecutor(new CrossMessageCommand());
 
 		//Test command
 		getCommand("test").setExecutor(new TestCommand());
 		getCommand("debug").setExecutor(new DebugCommand());
+		getCommand("rstatus").setExecutor(new RequestStatusCommand());
 
 
 		Map<String, Map<String, Object>> map = getDescription().getCommands();

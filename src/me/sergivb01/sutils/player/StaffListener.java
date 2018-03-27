@@ -46,7 +46,7 @@ public class StaffListener implements Listener{
 		for(String str : commands){
 			if(command.toLowerCase().startsWith("/" + str)){
 				logManager.formatMessage(player.getName(), "Executed command " + command);
-				PayloadSender.sendStaffImportant(player.getName(), command);
+				PayloadSender.sendStaffAbuse(player.getName(), command);
 			}
 		}
 

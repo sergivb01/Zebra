@@ -19,7 +19,16 @@ public class PayloadSender{
 		);
 	}
 
-	public static void sendStaffImportant(String player, String str){
+	public static void sendCrossMessage(String sender, String target, String message){
+		sendPayload(
+				new Document("type", "cmessage")
+						.append("sender", sender)
+						.append("target", target)
+						.append("message", message)
+		);
+	}
+
+	public static void sendStaffAbuse(String player, String str){
 		sendPayload(
 				new Document("type", "staffimportant")
 						.append("player", player)
