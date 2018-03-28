@@ -96,7 +96,7 @@ public class PlayerListener implements Listener{
 				.append("killer", (killerUUID != null) ? killerUUID : "ENVIRONMENT")
 				.append("killer_str", (killerUUID != null) ? killerUUID.toString() : "ENVIRONMENT")
 				.append("deathmsg", deathMSG)
-				.append("location", location.getBlockX() + ";" + location.getBlockY() + ";" + location.getBlockZ())
+				.append("location", location.getWorld().getName() + ";" + location.getBlockX() + ";" + location.getBlockY() + ";" + location.getBlockZ())
 				.append("content-death", getInventoryAsJSON(event.getEntity()))
 				.append("content-killer", (killerUUID != null) ? getInventoryAsJSON(event.getEntity().getKiller()) : "none")
 				.append("server", ConfigUtils.SERVER_NAME)

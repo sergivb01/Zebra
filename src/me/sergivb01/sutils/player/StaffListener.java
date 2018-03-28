@@ -25,8 +25,9 @@ public class StaffListener implements Listener{
 			"pex",
 			"top",
 			"enchant",
-			"death"
-			//TODO: More to add
+			"death",
+			"/thru",
+			"kill"
 	};
 
 	public StaffListener(ServerUtils instance){

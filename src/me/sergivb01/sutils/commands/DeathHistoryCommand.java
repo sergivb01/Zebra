@@ -3,6 +3,7 @@ package me.sergivb01.sutils.commands;
 import me.sergivb01.sutils.database.mongo.MongoDBDatabase;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,8 +33,19 @@ public class DeathHistoryCommand implements CommandExecutor{
 
 		sender.sendMessage(GREEN + "Last 20 deaths from " + GREEN + target.getName());
 		for(Document doc : MongoDBDatabase.getRecentDeaths(target.getUniqueId())){
+			String killer = doc.getString("killer_str"); //UUID
+			String dead = doc.getString("dead_str"); //UUID
+			String message = doc.getString("message");
+
+			String[] loc_str = doc.getString("location").split(";");
+
+			Location location = new Location(Bukkit.getWorld(loc_str[0]), Double.parseDouble(loc_str[1]), Double.parseDouble(loc_str[2]), Double.parseDouble(loc_str[3]));
+
+			long death_timestamp = doc.getLong("timestamp");
+			long time_ago = System.currentTimeMillis() - death_timestamp;
+
+			//TODO: Do something useful with this lol
 			sender.sendMessage(doc.toJson());
-			//TODO: Make this nice
 		}
 
 
