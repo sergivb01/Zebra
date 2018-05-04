@@ -43,7 +43,7 @@ public class PayloadSender{
 						.append("online", Bukkit.getOnlinePlayers().size())
 						.append("max", Bukkit.getMaxPlayers())
 						.append("whitelist", Bukkit.hasWhitelist())
-						.append("donor", up ? BasePlugin.getPlugin().getServerHandler().isDonorOnly() : true)
+						.append("donor", up ? BasePlugin.getPlugin().getServerHandler().isDonorOnly() : true) //TODO: Find cleaner way
 						.append("tps", new Document("tps0", Bukkit.spigot().getTPS()[0])
 								.append("tps1", Bukkit.spigot().getTPS()[1])
 								.append("tps2", Bukkit.spigot().getTPS()[2]))

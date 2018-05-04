@@ -183,7 +183,7 @@ public class PayloadParser{
 
 	}
 
-	private static Collection<Player> getStaff(){
+	private static Collection<Player> getStaff(){ //TODO: Change permission
 		return Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission("rank.staff")).collect(Collectors.toList());
 	}
 
