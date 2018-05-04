@@ -25,9 +25,7 @@ public class ServerCache{
 
 	public static Server getServerByName(String name){
 		for(Server srv : servers){
-			if(srv.getName().equalsIgnoreCase(name)){
-				return srv;
-			}
+			if(srv.getName().equalsIgnoreCase(name)) return srv;
 		}
 		return null;
 	}
