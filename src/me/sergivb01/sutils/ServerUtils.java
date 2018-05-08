@@ -60,7 +60,10 @@ public class ServerUtils extends JavaPlugin{
 			command.setPermissionMessage(ChatColor.translateAlternateColorCodes('&', "&e&l⚠ &cYou do not have permissions to execute this command."));
 		}
 
-		Bukkit.getScheduler().runTaskLater(this, () -> PayloadSender.sendData(true), 5 * 20L);
+		Bukkit.getScheduler().runTaskLater(this, () -> {
+			PayloadSender.sendData(true);
+			if(ConfigUtils.DEBUG) getLogger().info("Sent status update payload.");
+		}, 5 * 20L);
 	}
 
 	public void onDisable(){

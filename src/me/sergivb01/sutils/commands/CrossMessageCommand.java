@@ -15,13 +15,13 @@ public class CrossMessageCommand implements CommandExecutor{
 	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args){
 		if(!(sender instanceof Player)){
 			sender.sendMessage(ChatColor.RED + "Only players nigger.");
-			return false;
+			return true;
 		}
 		Player player = (Player) sender;
 
 		if(args.length < 2){
 			sender.sendMessage(RED + "Usage: '/cmsg <player> <message>'");
-			return false;
+			return true;
 		}
 
 		String target = args[0];

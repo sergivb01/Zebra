@@ -11,7 +11,6 @@ import java.util.HashMap;
 public class PayloadSender{
 	public static HashMap<String, Integer> reportedPlayers = new HashMap<>();
 
-
 	public static void sendKoth(String koth){
 		sendPayload(
 				new Document("type", "koth")

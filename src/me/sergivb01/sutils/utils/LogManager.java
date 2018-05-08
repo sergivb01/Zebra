@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LogManager{
-
 	private ServerUtils instance;
 	private File file;
 

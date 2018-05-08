@@ -17,7 +17,7 @@ public class RequestStatusCommand implements CommandExecutor{
 
 		String srv = args[0];
 		PayloadSender.sendReqData(srv);
-		sender.sendMessage(YELLOW + "Sent request data payload to " + GOLD + srv + YELLOW + ".");
+		sender.sendMessage(YELLOW + "Sent request data payload to " + GOLD + srv + YELLOW + ". " + BOLD + "Developer use only!");
 
 
 		return true;

@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class StaffListener implements Listener{
 	private ServerUtils instance;
 	private LogManager logManager;
-	private String[] commands = {
+	private String[] commands = { //TODO: Implement config (?)
 			"more",
 			"time",
 			"sudo",
@@ -39,8 +39,7 @@ public class StaffListener implements Listener{
 	@EventHandler
 	public void onWorldEditCommand(PlayerCommandPreprocessEvent event){
 		Player player = event.getPlayer();
-		//TODO: Change permission
-		if(!player.hasPermission("rank.staff")){
+		if(!player.hasPermission("rank.staff")){ //TODO: Change permission
 			return;
 		}
 

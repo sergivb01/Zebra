@@ -22,8 +22,6 @@ public class ConfigUtils{
 
 	public static String SERVER_NAME = "unknown";
 
-	public static String AGENT_API_KEY;
-
 
 	public static void updateConfig(ServerUtils instance){
 		REDIS_HOST = instance.getConfig().getString("database.redis.host");
@@ -43,9 +41,6 @@ public class ConfigUtils{
 
 
 		SERVER_NAME = instance.getConfig().getString("server.name");
-
-
-		AGENT_API_KEY = instance.getConfig().getString("agent.key");
 	}
 
 

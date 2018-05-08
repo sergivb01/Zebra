@@ -12,7 +12,7 @@ public class Publisher{
 	private String channel;
 
 	public Publisher(){
-		if(ConfigUtils.REDIS_AUTH_ENABLED){
+		if(ConfigUtils.REDIS_AUTH_ENABLED){ //Handle auth
 			pool = new JedisPool(new JedisPoolConfig(), ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT, ConfigUtils.REDIS_TIMEOUT, ConfigUtils.REDIS_AUTH_PASSWORD);
 		}else{
 			pool = new JedisPool(new JedisPoolConfig(), ConfigUtils.REDIS_HOST, ConfigUtils.REDIS_PORT, ConfigUtils.REDIS_TIMEOUT);
@@ -24,7 +24,7 @@ public class Publisher{
 		Jedis jedis = null;
 		try{
 			jedis = pool.getResource();
-			if(ConfigUtils.REDIS_AUTH_ENABLED){
+			if(ConfigUtils.REDIS_AUTH_ENABLED){ //Need to auth every single time we write a message
 				jedis.auth(ConfigUtils.REDIS_AUTH_PASSWORD);
 			}
 			jedis.publish(channel, message);

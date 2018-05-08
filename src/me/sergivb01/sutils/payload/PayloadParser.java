@@ -18,8 +18,8 @@ public class PayloadParser{
 
 	public static void parse(String docStr){
 		Document doc = Document.parse(docStr);
-		String type = doc.getString("type");
-		String server = (String) doc.getOrDefault("server", "none");
+		String type = doc.getString("type"); //Payload type
+		String server = (String) doc.getOrDefault("server", "none"); //Payloads may not have server set
 
 		switch(type.toLowerCase()){
 			case "cmessage":{

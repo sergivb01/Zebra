@@ -17,7 +17,7 @@ public class DebugCommand implements CommandExecutor{
 		final Player target = Bukkit.getPlayer(args[0]);
 		if(target == null){
 			sender.sendMessage(RED + "No player named '" + args[0] + "' found online.");
-			return false;
+			return true;
 		}
 
 		sender.sendMessage(BLUE + "Display name: " + WHITE + target.getDisplayName());

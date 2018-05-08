@@ -30,9 +30,6 @@ public class PlayerListener implements Listener{
 	public PlayerListener(ServerUtils instance){
 		this.instance = instance;
 		Bukkit.getPluginManager().registerEvents(this, instance);
-		for(Player player : Bukkit.getOnlinePlayers()){
-			Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(player, "placeholder"));
-		}
 	}
 
 	@EventHandler
@@ -64,6 +61,7 @@ public class PlayerListener implements Listener{
 		if(!player.hasPermission("rank.staff")){ //TODO: Change permission
 			return;
 		}
+
 		if(BasePlugin.getPlugin().getUserManager().getUser(player.getUniqueId()).isInStaffChat()){//Staffchat
 			PayloadSender.sendStaffchat(player.getName(), event.getMessage());
 			event.setCancelled(true);

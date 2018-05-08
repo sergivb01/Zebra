@@ -23,19 +23,19 @@ public class RequestCommand implements CommandExecutor{
 	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args){
 		if(!(sender instanceof Player)){
 			sender.sendMessage(RED + "Only players nigger.");
-			return false;
+			return true;
 		}
 		Player player = (Player) sender;
 
 		if(args.length == 0){
 			player.sendMessage(RED + "Usage: /request <reason...>");
-			return false;
+			return true;
 		}
 
 		if(RequestCommand.COOLDOWNS.containsKey(player.getUniqueId())){
 			if(System.currentTimeMillis() - RequestCommand.COOLDOWNS.get(player.getUniqueId()) < 100000L){
 				player.sendMessage(RED + "You must wait before attempting to request staff assistance again.");
-				return false;
+				return true;
 			}
 			RequestCommand.COOLDOWNS.remove(player.getUniqueId());
 		}

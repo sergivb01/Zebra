@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class InventoryUtils{
 
-	public static String getInventoryAsJSON(Player player){
+	public static String getInventoryAsJSON(Player player){ //Find cleaner way
 		Map<String, String> invMap = new HashMap<>();
 
 		for(int i = 0; i < 35; i++){

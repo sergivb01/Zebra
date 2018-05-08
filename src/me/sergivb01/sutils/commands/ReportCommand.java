@@ -25,31 +25,31 @@ public class ReportCommand implements CommandExecutor{
 	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args){
 		if(!(sender instanceof Player)){
 			sender.sendMessage(ChatColor.RED + "Only players nigger.");
-			return false;
+			return true;
 		}
 		Player player = (Player) sender;
 
 		if(args.length < 2){
 			sender.sendMessage(RED + "Usage: '/report <player> <reason...>'");
-			return false;
+			return true;
 		}
 
 
 		final Player reported = Bukkit.getPlayer(args[0]);
 		if(reported == null){
 			player.sendMessage(RED + "No player named '" + args[0] + "' found online.");
-			return false;
+			return true;
 		}
 
-		/*if(reported.equals(player)){
+		if(reported.equals(player)){ //Prevent users from reporting themselves
 			player.sendMessage(RED + "You can't report yourself!");
-			return false;
-		}*/
+			return true;
+		}
 
 		if(ReportCommand.COOLDOWNS.containsKey(player.getUniqueId())){
 			if(System.currentTimeMillis() - ReportCommand.COOLDOWNS.get(player.getUniqueId()) < 100000L){
 				player.sendMessage(RED + "You must wait before attempting to reporting a player again.");
-				return false;
+				return true;
 			}
 			ReportCommand.COOLDOWNS.remove(player.getUniqueId());
 		}
@@ -59,7 +59,7 @@ public class ReportCommand implements CommandExecutor{
 		player.sendMessage(GREEN + "Staff have been notified of your player report.");
 		ReportCommand.COOLDOWNS.put(player.getUniqueId(), System.currentTimeMillis());
 
-		if(!PayloadSender.reportedPlayers.containsKey(reported.getName())){
+		if(!PayloadSender.reportedPlayers.containsKey(reported.getName())){ //TODO: Clean up reported players feauture
 			PayloadSender.reportedPlayers.put(reported.getName(), 0);
 			return true;
 		}

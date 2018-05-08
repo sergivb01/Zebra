@@ -20,12 +20,12 @@ public class StaffServerCommand implements CommandExecutor{
 	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args){
 		if(!(sender instanceof Player)){
 			sender.sendMessage(RED + "Only players nigger.");
-			return false;
+			return true;
 		}
 
 		if(args.length <= 0){
 			sender.sendMessage(RED + "Usage: '/staffserver <server>'");
-			return false;
+			return true;
 		}
 
 		Player player = (Player) sender;

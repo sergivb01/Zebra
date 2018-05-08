@@ -16,19 +16,19 @@ public class DeathHistoryCommand implements CommandExecutor{
 	public boolean onCommand(final CommandSender sender, final Command comm, final String label, final String[] args){
 		/*if(!(sender instanceof Player)){
 			sender.sendMessage(ChatColor.RED + "Only players nigger.");
-			return false;
+			return true;
 		}
 		Player player = (Player) sender;*/
 
 		if(args.length < 1){
 			sender.sendMessage(RED + "Usage: '/dhist <player>'");
-			return false;
+			return true;
 		}
 
 		OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 		if(target == null){
 			sender.sendMessage(RED + "No player named '" + args[0] + "' found.");
-			return false;
+			return true;
 		}
 
 		sender.sendMessage(GREEN + "Last 20 deaths from " + GREEN + target.getName());

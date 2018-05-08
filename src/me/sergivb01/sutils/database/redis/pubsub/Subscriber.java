@@ -30,7 +30,7 @@ public class Subscriber{
 
 	private void init(){
 		jedisPubSub = this.get();
-		new Thread(() -> jedis.subscribe(jedisPubSub, ConfigUtils.REDIS_CHANNEL)).start();
+		new Thread(() -> jedis.subscribe(jedisPubSub, ConfigUtils.REDIS_CHANNEL)).start(); //Create subscriber in new Thread to avoid blocking main
 	}
 
 	private JedisPubSub get(){
@@ -39,9 +39,9 @@ public class Subscriber{
 			public void onMessage(final String channel, final String message){
 				final String[] args = message.split(";");
 				final String command = args[0].toLowerCase();
+				//TODO: Implement encryption (?)
 
-
-				if(command.equalsIgnoreCase("payload")){
+				if(command.equalsIgnoreCase("payload")){ //Only parse payloads - others not
 					PayloadParser.parse(args[1]);
 					return;
 				}

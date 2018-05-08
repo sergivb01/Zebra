@@ -34,6 +34,10 @@ public class Server{
 		this.lag = false;
 	}
 
+	public Document toDocument(){
+		return new Document(); //TODO: Add data
+	}
+
 	public void updateData(Document payload){
 		this.up = payload.getBoolean("up");
 		this.online = payload.getInteger("online");

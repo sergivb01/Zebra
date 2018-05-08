@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 public class TestCommand implements CommandExecutor{
 
 	public boolean onCommand(CommandSender sender, Command command, String s, String[] args){
-		sender.sendMessage("No tests");
+		sender.sendMessage("No test available.");
 		return true;
 	}
 
