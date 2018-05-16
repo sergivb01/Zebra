@@ -43,7 +43,6 @@ public class PlayerListener implements Listener{
 			if(player.hasPermission("rank.staff")) //TODO: Change permission
 				PayloadSender.sendSwitch(player.getName(), "joined");
 		}, 20L);
-
 	}
 
 	@EventHandler
